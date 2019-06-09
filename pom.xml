@@ -6,7 +6,12 @@
 
     <groupId>top.yinxiaokang</groupId>
     <artifactId>fragment</artifactId>
+    <packaging>pom</packaging>
     <version>1</version>
+
+    <modules>
+        <module>base</module>
+    </modules>
 
     
 </project>
