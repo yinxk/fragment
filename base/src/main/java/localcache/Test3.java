@@ -9,13 +9,14 @@ import java.util.concurrent.TimeUnit;
 public class Test3 {
     public static void main(String[] args) {
         int count = 10000000;
+        int delay = 60;
 
         LocalCache<String, String> cache = new LocalCache<>();
         ScheduledExecutorService service1 = Executors.newScheduledThreadPool(100);
         Random random1 = new Random();
         Thread thread1 = new Thread(() -> {
             for (int i = 0; i < count; i++) {
-                service1.schedule(() -> cache.put(UUID.randomUUID().toString(), "testValue", random1.nextInt(30)),
+                service1.schedule(() -> cache.put(UUID.randomUUID().toString(), "testValue", random1.nextInt(delay)),
                         0, TimeUnit.MILLISECONDS);
             }
         });
@@ -26,7 +27,7 @@ public class Test3 {
         Thread thread2 = new Thread(() -> {
 
             for (int i = 0; i < count; i++) {
-                service2.schedule(() -> LocalCacheTimer.put(UUID.randomUUID().toString(), "testValue", random2.nextInt(30)),
+                service2.schedule(() -> LocalCacheTimer.put(UUID.randomUUID().toString(), "testValue", random2.nextInt(delay)),
                         0, TimeUnit.MILLISECONDS);
             }
         });

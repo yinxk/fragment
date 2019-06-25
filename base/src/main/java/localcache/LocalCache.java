@@ -58,9 +58,7 @@ public class LocalCache<K, V> {
      */
     public void remove(K key) {
         cacheMap.remove(key);
-        if (size() == 0) {
-            System.out.println("当前线程: " + Thread.currentThread().getName() + " ,容器大小: " + size() + ", 结束时间: " + System.currentTimeMillis());
-        }
+        System.out.println("当前线程: " + Thread.currentThread().getName() + " ,容器大小: " + size() + ", 结束时间: " + System.currentTimeMillis());
     }
 
 
