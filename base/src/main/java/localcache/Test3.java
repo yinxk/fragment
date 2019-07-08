@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Test3 {
     public static void main(String[] args) {
-        int count = 10000000;
+        int count = 1000000;
         int delay = 60;
 
         LocalCache<String, String> cache = new LocalCache<>();
