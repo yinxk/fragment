@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.yinxiaokang.framework.mybatis.simple.mapper.CountryMapper">
+<mapper namespace="top.yinxiaokang.framework.mybatis.simple.dao.CountryMapper">
 
     <select id="selectAll" resultType="top.yinxiaokang.framework.mybatis.simple.model.Country">
         SELECT id, countryname, countrycode
