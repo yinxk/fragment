@@ -21,5 +21,10 @@
     </environments>
     <mappers>
         <mapper resource="top/yinxiaokang/framework/mybatis/simple/mapper/CountryMapper.xml"/>
+        <mapper resource="top/yinxiaokang/framework/mybatis/simple/mapper/PrivilegeMapper.xml"/>
+        <mapper resource="top/yinxiaokang/framework/mybatis/simple/mapper/RoleMapper.xml"/>
+        <mapper resource="top/yinxiaokang/framework/mybatis/simple/mapper/RolePrivilegeMapper.xml"/>
+        <mapper resource="top/yinxiaokang/framework/mybatis/simple/mapper/UserMapper.xml"/>
+        <mapper resource="top/yinxiaokang/framework/mybatis/simple/mapper/UserRoleMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.yinxiaokang.framework.mybatis.simple.dao.UserMapper">
-  <resultMap id="BaseResultMap" type="top.yinxiaokang.framework.mybatis.simple.model.User">
+  <resultMap id="userMap" type="top.yinxiaokang.framework.mybatis.simple.model.User">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_info" javaType="TEXT" property="userInfo"/>
+    <result column="head_img" javaType="BLOB" property="headImg" />
     <result column="test_column" jdbcType="VARCHAR" property="testColumn" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, user_name, user_password, user_email, create_time, test_column
+  <sql id="column">
+    id, user_name, user_password, user_email, create_time, user_info, head_img , test_column
   </sql>
-  <sql id="Blob_Column_List">
-    user_info, head_img
-  </sql>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from sys_user
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <update id="updateByPrimaryKey" parameterType="top.yinxiaokang.framework.mybatis.simple.model.User">
-    update sys_user
-    set user_name = #{userName,jdbcType=VARCHAR},
-      user_password = #{userPassword,jdbcType=VARCHAR},
-      user_email = #{userEmail,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      test_column = #{testColumn,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+  
+  <select id="selectById" resultMap="userMap">
+        select
+        <include refid="column"></include>
+        from  sys_user where id = #{id}
+  </select>
 </mapper>
