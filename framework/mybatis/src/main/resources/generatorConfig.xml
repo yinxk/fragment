@@ -36,11 +36,26 @@
       <property name="enableSubPackages" value="true" />
     </javaClientGenerator>
 
-    <table schema="mybatis" tableName="user" domainObjectName="User"
+    <table schema="mybatis" tableName="sys_user" domainObjectName="User"
            enableCountByExample="false" enableUpdateByExample="false"
            enableDeleteByExample="false" enableSelectByExample="false"
-           selectByExampleQueryId="false"    >
-    </table>
+           selectByExampleQueryId="false"    />
+    <table schema="mybatis" tableName="sys_role" domainObjectName="Role"
+           enableCountByExample="false" enableUpdateByExample="false"
+           enableDeleteByExample="false" enableSelectByExample="false"
+           selectByExampleQueryId="false"    />
+    <table schema="mybatis" tableName="sys_user_role" domainObjectName="UserRole"
+           enableCountByExample="false" enableUpdateByExample="false"
+           enableDeleteByExample="false" enableSelectByExample="false"
+           selectByExampleQueryId="false"    />
+    <table schema="mybatis" tableName="sys_privilege" domainObjectName="Privilege"
+           enableCountByExample="false" enableUpdateByExample="false"
+           enableDeleteByExample="false" enableSelectByExample="false"
+           selectByExampleQueryId="false"    />
+    <table schema="mybatis" tableName="sys_role_privilege" domainObjectName="RolePrivilege"
+           enableCountByExample="false" enableUpdateByExample="false"
+           enableDeleteByExample="false" enableSelectByExample="false"
+           selectByExampleQueryId="false"    />
 
   </context>
 </generatorConfiguration>
