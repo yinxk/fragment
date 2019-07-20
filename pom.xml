@@ -18,7 +18,7 @@
     <modules>
         <module>base</module>
         <module>excel-util</module>
-        <module>util</module>
+        <module>util</module><module>framework</module>
     </modules>
 
     <dependencies>
@@ -38,6 +38,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
     </dependencies>
 
