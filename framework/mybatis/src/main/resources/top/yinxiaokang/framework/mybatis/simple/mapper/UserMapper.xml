@@ -17,7 +17,7 @@
   
   <select id="selectById" resultMap="userMap">
         select
-        <include refid="column"></include>
+        <include refid="column"/>
         from  sys_user where id = #{id}
   </select>
 </mapper>
