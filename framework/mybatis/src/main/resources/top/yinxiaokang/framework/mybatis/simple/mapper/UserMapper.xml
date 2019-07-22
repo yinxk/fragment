@@ -3,13 +3,13 @@
 <mapper namespace="top.yinxiaokang.framework.mybatis.simple.dao.UserMapper">
   <resultMap id="userMap" type="top.yinxiaokang.framework.mybatis.simple.model.User">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
-    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="user_name"  property="userName" />
+    <result column="user_password" property="userPassword" />
+    <result column="user_email"  property="userEmail" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="user_info" javaType="TEXT" property="userInfo"/>
-    <result column="head_img" javaType="BLOB" property="headImg" />
-    <result column="test_column" jdbcType="VARCHAR" property="testColumn" />
+    <result column="user_info"  property="userInfo"/>
+    <result column="head_img" jdbcType="BLOB" property="headImg" />
+    <result column="test_column"  property="testColumn" />
   </resultMap>
   <sql id="column">
     id, user_name, user_password, user_email, create_time, user_info, head_img , test_column
