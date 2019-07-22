@@ -39,12 +39,12 @@ public class UserMapperTest extends BaseMapperTest {
             UserMapper mapper = session.getMapper(UserMapper.class);
             User user = new User();
             user.setUserName("test");
-            user.setUserPassword("test");
+            user.setUserPassword("testPass");
             user.setUserEmail("test@xx.com");
             user.setCreateTime(new Date());
             user.setUserInfo("ddd");
             user.setHeadImg(new byte[]{1,2,3,4,5,5});
-            user.setTestColumn("dddd");
+            user.setTestColumn("testColumn");
 
 
             int insert = mapper.insert(user);

@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.yinxiaokang.framework.mybatis.simple.dao.UserMapper">
   <resultMap id="userMap" type="top.yinxiaokang.framework.mybatis.simple.model.User">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_name"  property="userName" />
-    <result column="user_password" property="userPassword" />
-    <result column="user_email"  property="userEmail" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="user_info"  property="userInfo"/>
-    <result column="head_img" jdbcType="BLOB" property="headImg" />
-    <result column="test_column"  property="testColumn" />
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="user_name" property="userName"/>
+    <result column="user_password" property="userPassword"/>
+    <result column="user_email" property="userEmail"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="user_info" property="userInfo"/>
+    <result column="head_img" jdbcType="BLOB" property="headImg"/>
+    <result column="test_column" property="testColumn"/>
   </resultMap>
   <sql id="column">
     id, user_name, user_password, user_email, create_time, user_info, head_img , test_column
@@ -27,8 +27,8 @@
   </select>
 
   <insert id="insert">
-    insert into sys_user values
-    (#{id},#{userName},${userPassword}, ${userEmail}, #{createTime}, #{userInfo}, #{headImg}, #{testColumn})
+    insert into sys_user(user_name, user_password, user_email, user_info, head_img, create_time, test_column)
+    values(#{userName},#{userPassword}, #{userEmail},#{userInfo}, #{headImg, jdbcType=BLOB}, #{createTime, jdbcType=TIMESTAMP}, #{testColumn})
   </insert>
 
 </mapper>
