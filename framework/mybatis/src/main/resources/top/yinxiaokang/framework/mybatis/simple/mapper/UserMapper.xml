@@ -20,4 +20,10 @@
         <include refid="column"/>
         from  sys_user where id = #{id}
   </select>
+
+  <select id="selectAll" resultMap="userMap">
+    select <include refid="column"/>
+    from sys_user;
+  </select>
+
 </mapper>

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserMapper {
     List<User> selectById(String id);
+
+    List<User> selectAll();
 }
