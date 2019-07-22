@@ -26,4 +26,9 @@
     from sys_user;
   </select>
 
+  <insert id="insert">
+    insert into sys_user values
+    (#{id},#{userName},${userPassword}, ${userEmail}, #{createTime}, #{userInfo}, #{headImg}, #{testColumn})
+  </insert>
+
 </mapper>

@@ -8,4 +8,6 @@ public interface UserMapper {
     List<User> selectById(String id);
 
     List<User> selectAll();
+
+    int insert(User user);
 }
