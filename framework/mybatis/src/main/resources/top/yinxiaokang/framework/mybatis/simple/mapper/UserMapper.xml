@@ -31,4 +31,30 @@
     values(#{userName},#{userPassword}, #{userEmail},#{userInfo}, #{headImg, jdbcType=BLOB}, #{createTime, jdbcType=TIMESTAMP}, #{testColumn})
   </insert>
 
+  <insert id="insert2" useGeneratedKeys="true" keyProperty="id">
+    insert into sys_user(user_name, user_password, user_email, user_info, head_img, create_time, test_column)
+    values(#{userName},#{userPassword}, #{userEmail},#{userInfo}, #{headImg, jdbcType=BLOB}, #{createTime, jdbcType=TIMESTAMP}, #{testColumn})
+  </insert>
+
+  <!--MySQL方式, 在insert之后获取id值-->
+  <insert id="insert3" useGeneratedKeys="true" keyProperty="id">
+    insert into sys_user(user_name, user_password, user_email, user_info, head_img, create_time, test_column)
+    values(#{userName},#{userPassword}, #{userEmail},#{userInfo}, #{headImg, jdbcType=BLOB}, #{createTime, jdbcType=TIMESTAMP}, #{testColumn})
+    <selectKey keyColumn="id" resultType="long" keyProperty="id" order="AFTER">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <!--Oracle方式, 需要在insert之前获取id值, selectKey放置位置不影响, 通过order属性来决定先后, 放到前面为了直观-->
+  <insert id="insert4" useGeneratedKeys="true" keyProperty="id">
+
+    <selectKey keyColumn="id" resultType="long" keyProperty="id" order="BEFORE">
+      select seq_id.nextval from dual
+    </selectKey>
+
+    insert into sys_user(id, user_name, user_password, user_email, user_info, head_img, create_time, test_column)
+    values(#{id} ,#{userName},#{userPassword}, #{userEmail},#{userInfo}, #{headImg, jdbcType=BLOB}, #{createTime, jdbcType=TIMESTAMP}, #{testColumn})
+
+  </insert>
+
 </mapper>

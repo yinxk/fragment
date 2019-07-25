@@ -51,4 +51,48 @@ public class UserMapperTest extends BaseMapperTest {
             System.out.println(insert);
         }
     }
+    @Test
+    public void testInsert2() {
+        try (SqlSession session = getSqlSession()) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            User user = new User();
+            user.setUserName("test");
+            user.setUserPassword("testPass");
+            user.setUserEmail("test@xx.com");
+            user.setCreateTime(new Date());
+            user.setUserInfo("ddd");
+            user.setHeadImg(new byte[]{1,2,3,4,5,5});
+            user.setTestColumn("testColumn");
+
+
+            int insert = mapper.insert2(user);
+
+            System.out.println(user);
+            System.out.println(insert);
+        }
+    }
+
+    @Test
+    public void testInsert3() {
+        try (SqlSession session = getSqlSession()) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            User user = new User();
+            user.setUserName("test");
+            user.setUserPassword("testPass");
+            user.setUserEmail("test@xx.com");
+            user.setCreateTime(new Date());
+            user.setUserInfo("ddd");
+            user.setHeadImg(new byte[]{1,2,3,4,5,5});
+            user.setTestColumn("testColumn");
+
+
+            int insert = mapper.insert3(user);
+
+            System.out.println(user);
+            System.out.println(insert);
+        }
+    }
+
+
+
 }
