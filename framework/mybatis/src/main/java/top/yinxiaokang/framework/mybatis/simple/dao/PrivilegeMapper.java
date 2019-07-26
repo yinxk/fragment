@@ -1,17 +1,10 @@
 package top.yinxiaokang.framework.mybatis.simple.dao;
 
+import org.apache.ibatis.annotations.SelectProvider;
 import top.yinxiaokang.framework.mybatis.simple.model.Privilege;
+import top.yinxiaokang.framework.mybatis.simple.provider.PrivilegeProvider;
 
 public interface PrivilegeMapper {
-    int deleteByPrimaryKey(Long id);
-
-    int insert(Privilege record);
-
-    int insertSelective(Privilege record);
-
-    Privilege selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(Privilege record);
-
-    int updateByPrimaryKey(Privilege record);
+    @SelectProvider(type = PrivilegeProvider.class, method = "selectById")
+    Privilege selectById(final Long id);
 }
