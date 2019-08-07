@@ -7,8 +7,10 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
-
-        executorService.scheduleAtFixedRate(TestUtil::get, 0,1, TimeUnit.SECONDS);
+        for (int i = 0; i < 1000; i++) {
+            executorService.schedule(TestUtil::set, 0, TimeUnit.SECONDS);
+        }
+        executorService.scheduleAtFixedRate(TestUtil::get, 3,1, TimeUnit.SECONDS);
 
         while (true) {
             System.gc();
