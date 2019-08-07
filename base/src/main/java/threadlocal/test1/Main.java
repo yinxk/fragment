@@ -1,15 +1,23 @@
 package threadlocal.test1;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
 
-        executorService.execute(()->{
-            TestUtil.setCheck(Boolean.TRUE);
-            TestUtil.check("testStr");
-        });
+        executorService.scheduleAtFixedRate(TestUtil::get, 0,1, TimeUnit.SECONDS);
+
+        while (true) {
+            System.gc();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

@@ -1,19 +1,10 @@
 package threadlocal.test1;
 
 public class TestUtil {
-    private static final ThreadLocal<Boolean> THREAD_LOCAL = ThreadLocal.withInitial(() -> Boolean.FALSE);
+    private static final ThreadLocal<Boolean> THREAD_LOCAL = new ThreadLocal<>();
 
-
-    public static void setCheck(Boolean b) {
-        System.out.println("set: " + Thread.currentThread().getName());
-        THREAD_LOCAL.set(b);
-    }
-
-    public static boolean check(String s) {
-        System.out.println("check: " + Thread.currentThread().getName());
-        if (THREAD_LOCAL.get()) {
-            return "testStr3".equals(s);
-        }
-        return false;
+    public static void get() {
+        THREAD_LOCAL.set(Boolean.TRUE);
+        System.out.println("now: " + System.currentTimeMillis() + " threadName: " + Thread.currentThread().getName() + " getValue: " + THREAD_LOCAL.get());
     }
 }
