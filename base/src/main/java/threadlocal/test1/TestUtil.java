@@ -1,10 +1,12 @@
 package threadlocal.test1;
 
-public class TestUtil {
-    private static final ThreadLocal<Boolean> THREAD_LOCAL = new ThreadLocal<>();
+import java.math.BigDecimal;
 
-    public static void set(){
-        THREAD_LOCAL.set(Boolean.TRUE);
+public class TestUtil {
+    private static final ThreadLocal<BigDecimal> THREAD_LOCAL = new ThreadLocal<>();
+
+    public static void set(BigDecimal value){
+        THREAD_LOCAL.set(value);
         System.out.println("now: " + System.currentTimeMillis() + " threadName: " + Thread.currentThread().getName() + " set ----");
     }
 
