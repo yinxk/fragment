@@ -3,6 +3,7 @@ package threadlocal.test1;
 
 import org.junit.Test;
 
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
@@ -15,7 +16,8 @@ public class WeakRefTest {
         WeakReference<Object> weakReference = new WeakReference<>(o, referenceQueue);
         System.gc();
         System.out.println(weakReference.get() == null);
-        System.out.println(referenceQueue.poll());
+        Reference<?> poll = referenceQueue.poll();
+        System.out.println(poll == null ? "" : poll.get());
         System.out.println("====");
 
         o = null;
@@ -26,7 +28,8 @@ public class WeakRefTest {
             e.printStackTrace();
         }
         System.out.println(weakReference.get() == null);
-        System.out.println(referenceQueue.poll());
+        poll = referenceQueue.poll();
+        System.out.println(poll == null ? "" : poll.get());
         System.out.println("====");
 
     }
