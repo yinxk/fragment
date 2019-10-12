@@ -20,7 +20,6 @@
         <module>excel-util</module>
         <module>util</module>
         <module>framework</module>
-        <module>rbac</module>
     </modules>
 
     <dependencies>
