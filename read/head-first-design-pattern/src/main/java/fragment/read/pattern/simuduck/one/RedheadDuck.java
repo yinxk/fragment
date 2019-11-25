@@ -1,4 +1,4 @@
-package fragment.read.pattern.simuduck;
+package fragment.read.pattern.simuduck.one;
 
 /**
  * 红脑壳鸭子
