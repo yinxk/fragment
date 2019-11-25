@@ -23,4 +23,11 @@ public abstract class Duck {
      * 鸭子有不同的外观
      */
     public abstract void display();
+
+    /**
+     * 需求变化, 需要鸭子会飞
+     */
+    public void fly() {
+        System.out.println("鸭子飞");
+    }
 }
