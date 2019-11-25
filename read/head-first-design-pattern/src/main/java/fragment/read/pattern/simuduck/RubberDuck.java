@@ -13,4 +13,9 @@ public class RubberDuck extends Duck {
     public void display() {
         System.out.println("外观橡皮鸭");
     }
+
+    @Override
+    public void fly() {
+        // 覆盖, 变成什么事情也不要做
+    }
 }
