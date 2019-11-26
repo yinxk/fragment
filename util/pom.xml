@@ -6,12 +6,19 @@
 
     <artifactId>util</artifactId>
 
-
     <parent>
         <artifactId>fragment</artifactId>
         <groupId>top.yinxiaokang</groupId>
         <version>1</version>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.7</version>
+        </dependency>
+    </dependencies>
 
 
 
