@@ -1,4 +1,4 @@
-package fragment.read.pattern.observer;
+package fragment.read.pattern.observer.one;
 
 import java.util.ArrayList;
 import java.util.List;

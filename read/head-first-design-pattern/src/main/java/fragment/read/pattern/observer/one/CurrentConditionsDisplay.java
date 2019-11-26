@@ -1,4 +1,4 @@
-package fragment.read.pattern.observer;
+package fragment.read.pattern.observer.one;
 
 public class CurrentConditionsDisplay implements Observer, DisplayElement {
     private float temperature;

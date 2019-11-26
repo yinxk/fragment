@@ -1,4 +1,4 @@
-package fragment.read.pattern.observer;
+package fragment.read.pattern.observer.one;
 
 public class StatisticsDisplay implements Observer,DisplayElement {
     private Subject weatherData;

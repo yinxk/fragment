@@ -1,4 +1,4 @@
-package fragment.read.pattern.observer;
+package fragment.read.pattern.observer.one;
 
 public class WeatherStation {
     public static void main(String[] args) {
