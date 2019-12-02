@@ -1,4 +1,4 @@
-package fragment.read.pattern.factory.SimpleFactory;
+package fragment.read.pattern.factory.factoryMethod;
 
 /**
  * 披萨

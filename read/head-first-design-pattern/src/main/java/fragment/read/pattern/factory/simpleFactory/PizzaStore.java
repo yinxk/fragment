@@ -1,4 +1,4 @@
-package fragment.read.pattern.factory.SimpleFactory;
+package fragment.read.pattern.factory.simpleFactory;
 
 public class PizzaStore {
     SimplePizzaFactory factory;

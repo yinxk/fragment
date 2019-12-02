@@ -1,26 +1,24 @@
-package fragment.read.pattern.factory.SimpleFactory;
+package fragment.read.pattern.factory.factoryMethod;
 
 import java.util.Optional;
 
-/**
- * 简单工厂
- */
-public class SimplePizzaFactory {
-    public Pizza createPizza(String type) {
-        Pizza pizza = null;
+public class ChicagoPizzaStore extends PizzaStore {
+    @Override
+    protected Pizza createPizza(String type) {
+        Pizza pizza;
         type = Optional.ofNullable(type).orElse("default");
         switch (type) {
             case "cheese":
-                pizza = new CheesePizza();
+                pizza = new ChicagoStyleCheesePizza();
                 break;
             case "pepperoni":
-                pizza = new PepperoniPizza();
+                pizza = new ChicagoStylePepperoniPizza();
                 break;
             case "clam":
-                pizza = new ClamPizza();
+                pizza = new ChicagoStyleClamPizza();
                 break;
             case "veggie":
-                pizza = new VeggiePizza();
+                pizza = new ChicagoStyleVeggiePizza();
                 break;
             default:
                 pizza = new DefaultPizza();
