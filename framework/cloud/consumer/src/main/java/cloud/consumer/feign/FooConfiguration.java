@@ -11,4 +11,9 @@ public class FooConfiguration {
     Logger.Level feignLoggerLevel() {
         return Logger.Level.FULL;
     }
+
+    @Bean
+    Logger feignLogger() {
+        return new FeignLogger();
+    }
 }

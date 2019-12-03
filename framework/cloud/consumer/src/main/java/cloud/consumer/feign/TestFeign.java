@@ -8,7 +8,7 @@ import cloud.base.response.dto.UserInfo;
 import cloud.base.response.dto.UserInfo2;
 import cloud.base.response.dto.UserInfo3;
 
-@FeignClient(value = "provider", configuration = FooConfiguration.class)
+@FeignClient(value = "provider")
 public interface TestFeign {
 
 	@GetMapping("/info")
