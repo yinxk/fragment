@@ -6,7 +6,7 @@ public class OrderTestDrive {
     public static void main(String[] args) {
 
         OrderService orderService = new OrderServiceImpl();
-        OrderService orderServiceProxy = new OrderServiceImpl();
+        OrderService orderServiceProxy = (OrderService) new JdkDynamicProxy(orderService).getProxyInstance();
 
         orderServiceProxy.confirm(9, 90);
         System.out.println("======");
