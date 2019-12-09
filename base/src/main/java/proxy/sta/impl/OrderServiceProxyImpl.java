@@ -10,13 +10,14 @@ public class OrderServiceProxyImpl implements OrderService {
     }
 
     @Override
-    public boolean confirm(int number, int money) {
+    public void confirm(int number, int money) {
         try {
-            return orderService.confirm(number, money);
+            System.out.println("开始事务");
+            orderService.confirm(number, money);
+            System.out.println("提交事务");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("由于: " + e.getMessage() + ", 回滚之前的操作");
+            System.out.println("由于: " + e.getMessage() + ", 回滚事务");
         }
-        return false;
     }
 }

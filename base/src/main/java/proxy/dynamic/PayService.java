@@ -1,9 +1,10 @@
-package proxy.sta;
+package proxy.dynamic;
 
 public interface PayService {
     /**
      * 假设为减去XX账户的余额
      * @param subtrahend 减数
+     * @return true: 成功, false: 失败
      */
-    void subtract(int subtrahend);
+    boolean subtract(int subtrahend);
 }

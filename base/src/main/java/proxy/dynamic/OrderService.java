@@ -1,4 +1,4 @@
-package proxy.sta;
+package proxy.dynamic;
 
 /**
  * 订单服务
@@ -9,6 +9,7 @@ public interface OrderService {
      *
      * @param number XX商品数量
      * @param money  需要支付总额
+     * @return true: 确认生成订单成功, false: 确认生成订单失败
      */
-    void confirm(int number, int money);
+    boolean confirm(int number, int money);
 }

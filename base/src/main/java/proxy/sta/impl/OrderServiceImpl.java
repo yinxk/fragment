@@ -9,14 +9,9 @@ public class OrderServiceImpl implements OrderService {
     PayService payService = new PayServiceImpl();
 
     @Override
-    public boolean confirm(int number, int money) {
-        boolean updateBalance = payService.subtract(money);
-        boolean updateCapacity = inventoryService.subtract(number);
-
-        if (updateBalance && updateCapacity) {
-            System.out.println("生成订单数据");
-            return true;
-        }
-        return false;
+    public void confirm(int number, int money) {
+        payService.subtract(money);
+        inventoryService.subtract(number);
+        System.out.println("生成订单数据");
     }
 }

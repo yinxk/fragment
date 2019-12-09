@@ -1,10 +1,11 @@
-package proxy.sta;
+package proxy.dynamic;
 
 public interface InventoryService {
 
     /**
      * 假设为减去XX商品的库存数量
      * @param subtrahend 减数
+     * @return true: 成功, false: 失败
      */
-    void subtract(int subtrahend);
+    boolean subtract(int subtrahend);
 }
