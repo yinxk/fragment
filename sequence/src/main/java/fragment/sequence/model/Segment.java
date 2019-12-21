@@ -2,48 +2,83 @@ package fragment.sequence.model;
 
 import java.math.BigInteger;
 
+import fragment.sequence.exception.SequenceOverflowException;
+
 public class Segment {
-    private BigInteger oldValue;
+    private final static BigInteger step = BigInteger.ONE;
 
-    private BigInteger segmentMaxValue;
+    private final static BigInteger MIN_SEGMENT_SIZE = new BigInteger("2");
 
-    private volatile boolean ready;
+    private final static BigInteger MAX_SEGMENT_SIZE = new BigInteger("9999");
 
-    public Segment(BigInteger oldValue, BigInteger segmentMaxValue) {
-        this.oldValue = oldValue;
-        this.segmentMaxValue = segmentMaxValue;
+    private volatile BigInteger lastValue = BigInteger.ZERO;
+
+    private volatile BigInteger segmentSize = BigInteger.ZERO;
+
+    private volatile BigInteger segmentMaxValue = BigInteger.ZERO;
+
+    private volatile BigInteger idleNumber = MIN_SEGMENT_SIZE.divide(SegmentBuffer.getNextSegmentIdleDivisor());
+
+    private final SegmentBuffer buffer;
+
+    public Segment(SegmentBuffer buffer) {
+        this.buffer = buffer;
     }
 
-    public BigInteger getOldValue() {
-        return oldValue;
+    public void toSegment(SequenceModel model) {
+        BigInteger maxValue = model.getMaxValue();
+        this.lastValue = model.getLastNumber();
+        if (this.lastValue.compareTo(maxValue) == 0) {
+            if (model.isCycleFlag()) {
+                lastValue = model.getMinValue().subtract(step);
+            } else {
+                throw new SequenceOverflowException();
+            }
+        }
+        this.segmentSize = model.getSegmentSize();
+        if (segmentSize.compareTo(MIN_SEGMENT_SIZE) < 0) {
+            segmentSize = MIN_SEGMENT_SIZE;
+        } else if (segmentSize.compareTo(MAX_SEGMENT_SIZE) > 0) {
+            segmentSize = MAX_SEGMENT_SIZE;
+        }
+        segmentMaxValue = lastValue.add(segmentSize);
+        if (segmentMaxValue.compareTo(maxValue) > 0) {
+            segmentMaxValue = maxValue;
+        }
+        idleNumber = segmentSize.divide(SegmentBuffer.getNextSegmentIdleDivisor());
     }
 
-    public void setOldValue(BigInteger oldValue) {
-        this.oldValue = oldValue;
+    public BigInteger getNextValueAndUpdate() {
+        lastValue = lastValue.add(step);
+        return lastValue;
+    }
+
+    public BigInteger getSegmentSize() {
+        return segmentSize;
     }
 
     public BigInteger getSegmentMaxValue() {
         return segmentMaxValue;
     }
 
-    public void setSegmentMaxValue(BigInteger segmentMaxValue) {
-        this.segmentMaxValue = segmentMaxValue;
+    public BigInteger getLastValue() {
+        return lastValue;
     }
 
-    public boolean isReady() {
-        return ready;
+    public boolean isIdleLessThanIdleNumber() {
+        return segmentMaxValue.subtract(lastValue).compareTo(idleNumber) <= 0;
     }
 
-    public void setReady(boolean ready) {
-        this.ready = ready;
+    public SegmentBuffer getBuffer() {
+        return buffer;
     }
 
     @Override
     public String toString() {
         return "Segment{" +
-                "oldValue=" + oldValue +
+                "lastValue=" + lastValue +
+                ", segmentSize=" + segmentSize +
                 ", segmentMaxValue=" + segmentMaxValue +
-                ", ready=" + ready +
                 '}';
     }
 }

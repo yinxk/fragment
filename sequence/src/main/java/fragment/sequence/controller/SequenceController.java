@@ -18,6 +18,8 @@ public class SequenceController {
 
     @GetMapping("/get/next/value/{sequenceName}")
     public BigInteger getNextVal(@PathVariable("sequenceName") String sequenceName) {
-        return sequenceGenService.nextVal(sequenceName);
+        BigInteger nextVal = sequenceGenService.nextVal(sequenceName);
+        log.info("{}", nextVal);
+        return nextVal;
     }
 }

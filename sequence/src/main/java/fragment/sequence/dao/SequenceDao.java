@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -26,17 +27,12 @@ public class SequenceDao {
      *
      * @return 所有序列
      */
-    public List<SequenceModel> findAll() {
+    public List<String> findAllSequenceName() {
         String sql = " SELECT " +
-                "           sequence_name," +
-                "           min_value," +
-                "           max_value," +
-                "           cycle_flag," +
-                "           last_number," +
-                "           segment_size" +
+                "           sequence_name" +
                 "    FROM" +
                 "        seq_sequence";
-        return namedParameterJdbcTemplate.query(sql, new SequenceRowMapper());
+        return namedParameterJdbcTemplate.queryForList(sql, EmptySqlParameterSource.INSTANCE, String.class);
     }
 
     /**
@@ -67,23 +63,19 @@ public class SequenceDao {
     }
 
     /**
-     * 根据序列名和旧值更新新值
+     * 根据序列名更新最后一次使用的值
      *
      * @param sequenceName 序列名
-     * @param oldValue     旧值
-     * @param newValue     新值
+     * @param segmentSize  号段大小
      * @return 更新行数
      */
-    public int updateSequenceByNameAndOldValue(String sequenceName, BigInteger oldValue, BigInteger newValue) {
-
+    public int updateSequenceLastNumberByName(String sequenceName, BigInteger segmentSize) {
         String sql = "  UPDATE seq_sequence" +
-                "       SET last_number = :newValue" +
-                "       WHERE sequence_name = :sequenceName" +
-                "               AND last_number = :oldValue";
+                "       SET last_number = last_number + :segmentSize" +
+                "       WHERE sequence_name = :sequenceName";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sequenceName", sequenceName);
-        paramMap.put("oldValue", oldValue);
-        paramMap.put("newValue", newValue);
+        paramMap.put("segmentSize", segmentSize);
         return namedParameterJdbcTemplate.update(sql, paramMap);
     }
 
