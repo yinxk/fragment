@@ -22,6 +22,7 @@
         <module>framework</module>
         <module>fragment-redis</module>
         <module>fragment-rbac</module><module>fragment-scheme</module><module>read</module>
+        <module>sequence</module>
     </modules>
 
     <dependencies>
