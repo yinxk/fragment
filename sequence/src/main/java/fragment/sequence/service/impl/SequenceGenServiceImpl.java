@@ -42,7 +42,8 @@ public class SequenceGenServiceImpl implements SequenceGenService {
         return t;
     });
 
-    private ExecutorService service = new ThreadPoolExecutor(2, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<>(), new UpdateThreadFactory());
+    private final static ExecutorService service =
+            new ThreadPoolExecutor(2, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<>(), new UpdateThreadFactory());
 
     public static class UpdateThreadFactory implements ThreadFactory {
 
@@ -59,8 +60,8 @@ public class SequenceGenServiceImpl implements SequenceGenService {
     }
 
 
-    private void updateCacheFromDbAtEveryMinute() {
-        scheduledExecutor.scheduleWithFixedDelay(this::updateCacheFromDb, 60, 60, TimeUnit.SECONDS);
+    private void updateCacheFromDbAtEveryDay() {
+        scheduledExecutor.scheduleWithFixedDelay(this::updateCacheFromDb, 1, 1, TimeUnit.DAYS);
     }
 
     private void updateCacheFromDb() {
@@ -102,7 +103,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
 
     private void init() {
         updateCacheFromDb();
-        // updateCacheFromDbAtEveryMinute();
+        updateCacheFromDbAtEveryDay();
     }
 
     @Override
@@ -116,9 +117,9 @@ public class SequenceGenServiceImpl implements SequenceGenService {
         }
         if (cache.containsKey(sequenceName)) {
             SegmentBuffer buffer = cache.get(sequenceName);
-            if (buffer.isNotInitOk()) {
+            if (buffer.notInitOk()) {
                 synchronized (buffer) {
-                    if (buffer.isNotInitOk()) {
+                    if (buffer.notInitOk()) {
                         Segment current = buffer.getCurrent();
                         try {
                             updateSegmentFromDb(sequenceName, current);
@@ -148,7 +149,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
             throw new SequenceNotFoundException();
         }
         segment.toSegment(model);
-        sequenceDao.updateSequenceLastNumberByName(sequenceName, segment.getSegmentSize());
+        sequenceDao.updateSequenceLastNumberByNameAndNewValue(sequenceName, segment.getSegmentMaxValue());
     }
 
     public BigInteger getNextValFromSegmentBuffer(final SegmentBuffer buffer) {

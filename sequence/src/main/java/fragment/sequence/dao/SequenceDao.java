@@ -63,19 +63,20 @@ public class SequenceDao {
     }
 
     /**
-     * 根据序列名更新最后一次使用的值
+     * 根据序列名最后一次使用的值
      *
      * @param sequenceName 序列名
-     * @param segmentSize  号段大小
+     * @param newValue     新值
      * @return 更新行数
      */
-    public int updateSequenceLastNumberByName(String sequenceName, BigInteger segmentSize) {
+    public int updateSequenceLastNumberByNameAndNewValue(String sequenceName, BigInteger newValue) {
+
         String sql = "  UPDATE seq_sequence" +
-                "       SET last_number = last_number + :segmentSize" +
+                "       SET last_number = :newValue" +
                 "       WHERE sequence_name = :sequenceName";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sequenceName", sequenceName);
-        paramMap.put("segmentSize", segmentSize);
+        paramMap.put("newValue", newValue);
         return namedParameterJdbcTemplate.update(sql, paramMap);
     }
 

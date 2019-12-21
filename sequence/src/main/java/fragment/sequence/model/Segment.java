@@ -7,9 +7,15 @@ import fragment.sequence.exception.SequenceOverflowException;
 public class Segment {
     private final static BigInteger step = BigInteger.ONE;
 
-    private final static BigInteger MIN_SEGMENT_SIZE = new BigInteger("2");
+    private final static BigInteger MIN_SEGMENT_SIZE = new BigInteger("20");
 
     private final static BigInteger MAX_SEGMENT_SIZE = new BigInteger("9999");
+
+    private final static BigInteger DIVISOR = new BigInteger("2");
+
+    private final static BigInteger MAX_SEGMENT_IDLE_NUMBER = new BigInteger("500");
+
+    private final static BigInteger MAX_SEGMENT_IDLE_BOUNDARY = MAX_SEGMENT_IDLE_NUMBER.multiply(DIVISOR);
 
     private BigInteger lastValue = BigInteger.ZERO;
 
@@ -17,7 +23,7 @@ public class Segment {
 
     private BigInteger segmentMaxValue = BigInteger.ZERO;
 
-    private BigInteger idleNumber = MIN_SEGMENT_SIZE.divide(SegmentBuffer.getNextSegmentIdleDivisor());
+    private BigInteger idleNumber;
 
     private final SegmentBuffer buffer;
 
@@ -45,7 +51,11 @@ public class Segment {
         if (segmentMaxValue.compareTo(maxValue) > 0) {
             segmentMaxValue = maxValue;
         }
-        idleNumber = segmentSize.divide(SegmentBuffer.getNextSegmentIdleDivisor());
+        if (segmentSize.compareTo(MAX_SEGMENT_IDLE_BOUNDARY) > 0) {
+            idleNumber = MAX_SEGMENT_IDLE_NUMBER;
+        } else {
+            idleNumber = segmentSize.divide(DIVISOR);
+        }
     }
 
     public BigInteger getNextValueAndUpdate() {
@@ -79,6 +89,7 @@ public class Segment {
                 "lastValue=" + lastValue +
                 ", segmentSize=" + segmentSize +
                 ", segmentMaxValue=" + segmentMaxValue +
+                ", idleNumber=" + idleNumber +
                 '}';
     }
 }

@@ -1,6 +1,5 @@
 package fragment.sequence.model;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -15,7 +14,6 @@ public class SegmentBuffer {
     private volatile boolean initOk;
     private final AtomicBoolean threadRunning;
     private final ReadWriteLock lock;
-    private final static BigInteger NEXT_SEGMENT_IDLE_DIVISOR = new BigInteger("2");
 
     public SegmentBuffer() {
         segments = new Segment[]{new Segment(this), new Segment(this)};
@@ -54,7 +52,7 @@ public class SegmentBuffer {
         currentPos = nextPos();
     }
 
-    public boolean isNotInitOk() {
+    public boolean notInitOk() {
         return !initOk;
     }
 
@@ -82,13 +80,10 @@ public class SegmentBuffer {
         return lock.writeLock();
     }
 
-    public static BigInteger getNextSegmentIdleDivisor() {
-        return NEXT_SEGMENT_IDLE_DIVISOR;
-    }
-
     @Override
     public String toString() {
-        return "SegmentBuffer{" + "key='" + sequenceName + '\'' +
+        return "SegmentBuffer{" +
+                "sequenceName='" + sequenceName + '\'' +
                 ", segments=" + Arrays.toString(segments) +
                 ", currentPos=" + currentPos +
                 ", nextReady=" + nextReady +
