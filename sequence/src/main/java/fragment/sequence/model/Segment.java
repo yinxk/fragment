@@ -11,13 +11,13 @@ public class Segment {
 
     private final static BigInteger MAX_SEGMENT_SIZE = new BigInteger("9999");
 
-    private volatile BigInteger lastValue = BigInteger.ZERO;
+    private BigInteger lastValue = BigInteger.ZERO;
 
-    private volatile BigInteger segmentSize = BigInteger.ZERO;
+    private BigInteger segmentSize = BigInteger.ZERO;
 
-    private volatile BigInteger segmentMaxValue = BigInteger.ZERO;
+    private BigInteger segmentMaxValue = BigInteger.ZERO;
 
-    private volatile BigInteger idleNumber = MIN_SEGMENT_SIZE.divide(SegmentBuffer.getNextSegmentIdleDivisor());
+    private BigInteger idleNumber = MIN_SEGMENT_SIZE.divide(SegmentBuffer.getNextSegmentIdleDivisor());
 
     private final SegmentBuffer buffer;
 

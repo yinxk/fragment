@@ -134,7 +134,9 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                     }
                 }
             }
-            return getNextValFromSegmentBuffer(cache.get(sequenceName));
+            synchronized (buffer) {
+                return getNextValFromSegmentBuffer(cache.get(sequenceName));
+            }
         }
         throw new SequenceNotFoundException();
     }
@@ -196,13 +198,6 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                 if (buffer.isNextReady()) {
                     buffer.switchPos();
                     buffer.setNextReady(false);
-                }
-                // waitAndSleep(buffer);
-                else {
-                    if (logger.isErrorEnabled()) {
-                        logger.error("Both two segments in {} are not ready!", buffer);
-                    }
-                    throw new RuntimeException("Both two segments in {} are not ready!");
                 }
             } finally {
                 buffer.wLock().unlock();
