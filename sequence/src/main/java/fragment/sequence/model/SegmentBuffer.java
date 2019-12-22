@@ -14,6 +14,7 @@ public class SegmentBuffer {
     private volatile boolean initOk;
     private final AtomicBoolean threadRunning;
     private final ReadWriteLock lock;
+    private volatile boolean valueOutOfBounds;
 
     public SegmentBuffer() {
         segments = new Segment[]{new Segment(this), new Segment(this)};
@@ -22,6 +23,7 @@ public class SegmentBuffer {
         initOk = false;
         threadRunning = new AtomicBoolean(false);
         lock = new ReentrantReadWriteLock();
+        valueOutOfBounds = false;
     }
 
     public String getSequenceName() {
@@ -78,6 +80,14 @@ public class SegmentBuffer {
 
     public Lock wLock() {
         return lock.writeLock();
+    }
+
+    public boolean isValueOutOfBounds() {
+        return valueOutOfBounds;
+    }
+
+    public void setValueOutOfBounds(boolean valueOutOfBounds) {
+        this.valueOutOfBounds = valueOutOfBounds;
     }
 
     @Override

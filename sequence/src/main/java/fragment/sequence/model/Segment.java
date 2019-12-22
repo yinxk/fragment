@@ -38,7 +38,7 @@ public class Segment {
             if (model.isCycleFlag()) {
                 lastValue = model.getMinValue().subtract(step);
             } else {
-                throw new SequenceOutOfBoundsException();
+                throw new SequenceOutOfBoundsException(model.getSequenceName());
             }
         }
         this.segmentSize = model.getSegmentSize();

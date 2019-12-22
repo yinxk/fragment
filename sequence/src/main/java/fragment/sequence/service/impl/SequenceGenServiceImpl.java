@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import fragment.sequence.dao.SequenceDao;
 import fragment.sequence.exception.SequenceException;
 import fragment.sequence.exception.SequenceNotFoundException;
+import fragment.sequence.exception.SequenceOutOfBoundsException;
 import fragment.sequence.model.Segment;
 import fragment.sequence.model.SegmentBuffer;
 import fragment.sequence.model.SequenceModel;
@@ -123,6 +124,11 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                                 logger.info("Init buffer. Update sequence {} {} from db", sequenceName, current);
                             }
                             buffer.setInitOk(true);
+                        } catch (SequenceOutOfBoundsException e) {
+                            if (logger.isWarnEnabled()) {
+                                logger.warn("Init buffer. Sequence out of bounds ", e);
+                            }
+                            throw e;
                         } catch (Exception e) {
                             if (logger.isWarnEnabled()) {
                                 logger.warn("Init buffer {} exception", current, e);
@@ -151,6 +157,9 @@ public class SequenceGenServiceImpl implements SequenceGenService {
             buffer.rLock().lock();
             try {
                 final Segment segment = buffer.getCurrent();
+                if (buffer.isValueOutOfBounds()) {
+                    throw new SequenceOutOfBoundsException(buffer.getSequenceName());
+                }
                 if (!buffer.isNextReady() && segment.isIdleLessThanIdleNumber() && buffer.getThreadRunning().compareAndSet(false, true)) {
                     service.execute(() -> {
                         Segment next = buffer.getSegments()[buffer.nextPos()];
@@ -161,6 +170,11 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                             updateOk = true;
                             if (logger.isInfoEnabled()) {
                                 logger.info("update segment {} from db {}", buffer.getSequenceName(), next);
+                            }
+                        } catch (SequenceOutOfBoundsException e) {
+                            buffer.setValueOutOfBounds(true);
+                            if (logger.isWarnEnabled()) {
+                                logger.warn("update segment, sequence out of bounds ", e);
                             }
                         } catch (Exception e) {
                             if (logger.isWarnEnabled()) {
