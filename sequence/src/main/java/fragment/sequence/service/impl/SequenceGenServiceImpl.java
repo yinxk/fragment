@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +103,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
         }
     }
 
+    @PostConstruct
     private void init() {
         updateCacheFromDb();
         updateCacheFromDbAtEveryDay();
@@ -108,13 +111,6 @@ public class SequenceGenServiceImpl implements SequenceGenService {
 
     @Override
     public BigInteger nextVal(String sequenceName) throws SequenceException {
-        if (cache.size() == 0) {
-            synchronized (cache) {
-                if (cache.size() == 0) {
-                    init();
-                }
-            }
-        }
         if (cache.containsKey(sequenceName)) {
             SegmentBuffer buffer = cache.get(sequenceName);
             if (buffer.notInitOk()) {
