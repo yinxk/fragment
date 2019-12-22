@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import fragment.sequence.exception.SequenceException;
 import fragment.sequence.exception.SequenceNotFoundException;
-import fragment.sequence.exception.SequenceOverflowException;
+import fragment.sequence.exception.SequenceOutOfBoundsException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return "不存在的序列";
     }
-    @ExceptionHandler(SequenceOverflowException.class)
+    @ExceptionHandler(SequenceOutOfBoundsException.class)
     public String sequenceOverflow(HttpServletRequest request, final Exception e, HttpServletResponse response) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return "序列值超出最大值";

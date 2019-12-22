@@ -31,7 +31,7 @@ public class SequenceGenServiceTest {
     public void nextVal() {
         int threadNumber = 20;
         int runTimes = 100000;
-        String sequenceName = "testSeq6";
+        String sequenceName = "testSeq100";
         long start = System.currentTimeMillis();
         ExecutorService executorService = Executors.newFixedThreadPool(threadNumber);
         for (int i = 0; i < runTimes; i++) {

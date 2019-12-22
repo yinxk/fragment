@@ -2,7 +2,7 @@ package fragment.sequence.model;
 
 import java.math.BigInteger;
 
-import fragment.sequence.exception.SequenceOverflowException;
+import fragment.sequence.exception.SequenceOutOfBoundsException;
 
 public class Segment {
     private final static BigInteger step = BigInteger.ONE;
@@ -38,7 +38,7 @@ public class Segment {
             if (model.isCycleFlag()) {
                 lastValue = model.getMinValue().subtract(step);
             } else {
-                throw new SequenceOverflowException();
+                throw new SequenceOutOfBoundsException();
             }
         }
         this.segmentSize = model.getSegmentSize();
@@ -58,7 +58,7 @@ public class Segment {
         }
     }
 
-    public BigInteger getNextValueAndUpdate() {
+    public synchronized BigInteger getNextValueAndUpdate() {
         lastValue = lastValue.add(step);
         return lastValue;
     }

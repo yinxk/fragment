@@ -131,11 +131,9 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                     }
                 }
             }
-            synchronized (buffer) {
-                return getNextValFromSegmentBuffer(cache.get(sequenceName));
-            }
+            return getNextValFromSegmentBuffer(cache.get(sequenceName));
         }
-        throw new SequenceNotFoundException();
+        throw new SequenceNotFoundException(sequenceName);
     }
 
     @Transactional
