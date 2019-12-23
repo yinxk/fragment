@@ -8,7 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.databene.contiperf.PerfTest;
+import org.databene.contiperf.junit.ContiPerfRule;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ public class SequenceGenServiceTest {
 
     @Autowired
     SequenceGenService sequenceGenService;
+    @Rule
+    public ContiPerfRule rule = new ContiPerfRule();
 
     private final static Map<String, Integer> ALL_SEQ = new HashMap<>();
 
@@ -34,7 +39,7 @@ public class SequenceGenServiceTest {
         ALL_SEQ.put("testSeq30", 30000);
         ALL_SEQ.put("testSeq40", 40000);
         ALL_SEQ.put("testSeq50", 50000);
-        ALL_SEQ.put("testSeq100", 10_0000);
+        ALL_SEQ.put("testSeq100", 1000_0000);
         ALL_SEQ.put("testSeq200", 20_0000);
         ALL_SEQ.put("testSeq300", 30_0000);
         ALL_SEQ.put("testSeq400", 40_0000);
@@ -50,19 +55,19 @@ public class SequenceGenServiceTest {
         ALL_SEQ.put("testSeq9999", 200_0000);
     }
 
+
+    @Test
+    @PerfTest(threads = 10, invocations = 100_0000)
+    public void conTest() {
+        sequenceGenService.nextVal("testSeq100");
+    }
+
+
     @Test
     public void verifyNextVal() {
         int threadNumber = 10;
         int runTimes = 60_0000;
-        Random random = new Random();
-        Set<String> sequenceNameSet = new HashSet<>();
-        int size = ALL_SEQ.size();
-        String[] names = new String[size];
-        ALL_SEQ.keySet().toArray(names);
-        for (int i = 0; i < size * 2; i++) {
-            sequenceNameSet.add(names[random.nextInt(names.length)]);
-        }
-        verify(threadNumber, runTimes, sequenceNameSet);
+        verify(threadNumber, runTimes, ALL_SEQ.keySet());
     }
 
     @Test
@@ -73,7 +78,7 @@ public class SequenceGenServiceTest {
         String[] names = new String[size];
         ALL_SEQ.keySet().toArray(names);
         int randomIndex = random.nextInt(names.length);
-        String seqName = names[randomIndex];
+        String seqName = "testSeq100";
         int runTimes = ALL_SEQ.get(seqName);
         Set<String> sequenceNameSet = new HashSet<>();
         sequenceNameSet.add(seqName);
