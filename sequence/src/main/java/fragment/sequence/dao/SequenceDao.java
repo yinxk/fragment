@@ -47,6 +47,7 @@ public class SequenceDao {
                 "           min_value," +
                 "           max_value," +
                 "           cycle_flag," +
+                "           dynamic_size," +
                 "           last_number," +
                 "           segment_size" +
                 "    FROM" +
@@ -90,6 +91,7 @@ public class SequenceDao {
             sequenceModel.setCycleFlag(rs.getInt("cycle_flag") > 0);
             sequenceModel.setLastNumber(rs.getBigDecimal("last_number").toBigInteger());
             sequenceModel.setSegmentSize(rs.getBigDecimal("segment_size").toBigInteger());
+            sequenceModel.setDynamicSize(rs.getInt("dynamic_size") > 0);
             return sequenceModel;
         }
     }

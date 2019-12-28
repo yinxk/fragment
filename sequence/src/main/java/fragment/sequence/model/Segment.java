@@ -5,61 +5,74 @@ import java.math.BigInteger;
 import fragment.sequence.exception.SequenceOutOfBoundsException;
 
 public class Segment {
-    private final static BigInteger step = BigInteger.ONE;
-
-    private final static BigInteger MIN_SEGMENT_SIZE = new BigInteger("20");
-
-    private final static BigInteger MAX_SEGMENT_SIZE = new BigInteger("9999");
-
+    private final static BigInteger STEP = BigInteger.ONE;
+    private final static BigInteger MIN_SEGMENT_SIZE = new BigInteger("100");
+    private final static BigInteger MAX_SEGMENT_SIZE = new BigInteger("600000");
     private final static BigInteger DIVISOR = new BigInteger("2");
-
-    private final static BigInteger MAX_SEGMENT_IDLE_NUMBER = new BigInteger("500");
-
-    private final static BigInteger MAX_SEGMENT_IDLE_BOUNDARY = MAX_SEGMENT_IDLE_NUMBER.multiply(DIVISOR);
-
-    private BigInteger lastValue = BigInteger.ZERO;
-
-    private BigInteger segmentSize = BigInteger.ZERO;
-
-    private BigInteger segmentMaxValue = BigInteger.ZERO;
-
-    private BigInteger idleNumber;
-
+    private static final long SEGMENT_DURATION = 20 * 60 * 1000L;
+    private final static BigInteger LOAD_FACTOR = new BigInteger("2");
+    private volatile BigInteger lastValue = BigInteger.ZERO;
+    private volatile BigInteger segmentSize = BigInteger.ZERO;
+    private volatile BigInteger segmentMaxValue = BigInteger.ZERO;
+    private volatile BigInteger idleNumber;
     private final SegmentBuffer buffer;
 
     public Segment(SegmentBuffer buffer) {
         this.buffer = buffer;
     }
 
-    public void toSegment(SequenceModel model) {
+    public void update(SequenceModel model) {
         BigInteger maxValue = model.getMaxValue();
         this.lastValue = model.getLastNumber();
         if (this.lastValue.compareTo(maxValue) == 0) {
             if (model.isCycleFlag()) {
-                lastValue = model.getMinValue().subtract(step);
+                lastValue = model.getMinValue().subtract(STEP);
             } else {
                 throw new SequenceOutOfBoundsException(model.getSequenceName());
             }
         }
-        this.segmentSize = model.getSegmentSize();
-        if (segmentSize.compareTo(MIN_SEGMENT_SIZE) < 0) {
-            segmentSize = MIN_SEGMENT_SIZE;
-        } else if (segmentSize.compareTo(MAX_SEGMENT_SIZE) > 0) {
-            segmentSize = MAX_SEGMENT_SIZE;
+        BigInteger dbSize = model.getSegmentSize();
+        if (dbSize.compareTo(maxValue) > 0) {
+            dbSize = maxValue;
         }
-        segmentMaxValue = lastValue.add(segmentSize);
+        if (dbSize.compareTo(MIN_SEGMENT_SIZE) < 0) {
+            dbSize = MIN_SEGMENT_SIZE;
+        }
+        if (dbSize.compareTo(MAX_SEGMENT_SIZE) > 0) {
+            dbSize = MAX_SEGMENT_SIZE;
+        }
+        this.buffer.setDbSize(dbSize);
+        if (model.isDynamicSize()) {
+            long duration = System.currentTimeMillis() - buffer.getUpdateTimestamp();
+            BigInteger nextSize = buffer.getSize();
+            if (buffer.notInitOk() || buffer.getUpdateTimestamp() == 0) {
+                nextSize = buffer.getDbSize();
+            } else if (duration < SEGMENT_DURATION) {
+                if (nextSize.multiply(LOAD_FACTOR).compareTo(MAX_SEGMENT_SIZE) <= 0) {
+                    nextSize = nextSize.multiply(LOAD_FACTOR);
+                }
+            } else {
+                nextSize = nextSize.divide(LOAD_FACTOR);
+                if (nextSize.compareTo(buffer.getDbSize()) < 0) {
+                    nextSize = buffer.getDbSize();
+                }
+            }
+            this.buffer.setSize(nextSize);
+            this.buffer.setUpdateTimestamp(System.currentTimeMillis());
+        } else {
+            this.buffer.setSize(dbSize);
+        }
+
+        segmentMaxValue = lastValue.add(this.buffer.getSize());
         if (segmentMaxValue.compareTo(maxValue) > 0) {
             segmentMaxValue = maxValue;
         }
-        if (segmentSize.compareTo(MAX_SEGMENT_IDLE_BOUNDARY) > 0) {
-            idleNumber = MAX_SEGMENT_IDLE_NUMBER;
-        } else {
-            idleNumber = segmentSize.divide(DIVISOR);
-        }
+        this.segmentSize = this.buffer.getSize();
+        idleNumber = segmentSize.divide(DIVISOR);
     }
 
     public synchronized BigInteger getNextValueAndUpdate() {
-        lastValue = lastValue.add(step);
+        lastValue = lastValue.add(STEP);
         return lastValue;
     }
 

@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import fragment.sequence.dao.SequenceDao;
-import fragment.sequence.exception.SequenceException;
-import fragment.sequence.exception.SequenceNotFoundException;
-import fragment.sequence.exception.SequenceOutOfBoundsException;
+import fragment.sequence.exception.*;
 import fragment.sequence.model.Segment;
 import fragment.sequence.model.SegmentBuffer;
 import fragment.sequence.model.SequenceModel;
@@ -32,7 +30,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
 
     @Autowired
     private SequenceDao sequenceDao;
-
+    private final static long SEQUENCE_TIME_OUT_PERIOD = 3 * 1000L;
     /**
      * 缓存
      */
@@ -63,8 +61,8 @@ public class SequenceGenServiceImpl implements SequenceGenService {
     }
 
 
-    private void updateCacheFromDbAtEveryDay() {
-        scheduledExecutor.scheduleWithFixedDelay(this::updateCacheFromDb, 1, 1, TimeUnit.DAYS);
+    private void updateCacheFromDbAtEveryTenMin() {
+        scheduledExecutor.scheduleWithFixedDelay(this::updateCacheFromDb, 10, 10, TimeUnit.MINUTES);
     }
 
     private void updateCacheFromDb() {
@@ -82,8 +80,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
             // 将数据库新加入的sequenceName添加入缓存
             insertSequenceNames.removeAll(cachedSequenceNames);
             for (String sequenceName : insertSequenceNames) {
-                SegmentBuffer buffer = new SegmentBuffer();
-                buffer.setSequenceName(sequenceName);
+                SegmentBuffer buffer = new SegmentBuffer(sequenceName);
                 cache.put(sequenceName, buffer);
                 if (logger.isInfoEnabled()) {
                     logger.info("Add sequenceName {} from db to cache, SegmentBuffer {}", sequenceName, buffer);
@@ -107,7 +104,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
     @PostConstruct
     private void init() {
         updateCacheFromDb();
-        updateCacheFromDbAtEveryDay();
+        updateCacheFromDbAtEveryTenMin();
     }
 
     @Override
@@ -119,20 +116,17 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                     if (buffer.notInitOk()) {
                         Segment current = buffer.getCurrent();
                         try {
-                            updateSegmentFromDb(sequenceName, current);
+                            if (!updateSegmentFromDb(sequenceName, current)) {
+                                throw new SequenceBufferInitException(sequenceName);
+                            }
                             if (logger.isInfoEnabled()) {
                                 logger.info("Init buffer. Update sequence {} {} from db", sequenceName, current);
                             }
                             buffer.setInitOk(true);
                         } catch (SequenceOutOfBoundsException e) {
-                            if (logger.isWarnEnabled()) {
-                                logger.warn("Init buffer. Sequence out of bounds ", e);
-                            }
                             throw e;
                         } catch (Exception e) {
-                            if (logger.isWarnEnabled()) {
-                                logger.warn("Init buffer {} exception", current, e);
-                            }
+                            throw new SequenceBufferInitException(sequenceName, e);
                         }
                     }
                 }
@@ -143,16 +137,17 @@ public class SequenceGenServiceImpl implements SequenceGenService {
     }
 
     @Transactional
-    public void updateSegmentFromDb(String sequenceName, Segment segment) {
+    public boolean updateSegmentFromDb(String sequenceName, Segment segment) {
         SequenceModel model = sequenceDao.findBySequenceName(sequenceName);
         if (model == null || model.getSequenceName() == null) {
-            throw new SequenceNotFoundException();
+            return false;
         }
-        segment.toSegment(model);
-        sequenceDao.updateSequenceLastNumberByNameAndNewValue(sequenceName, segment.getSegmentMaxValue());
+        segment.update(model);
+        return 1 == sequenceDao.updateSequenceLastNumberByNameAndNewValue(sequenceName, segment.getSegmentMaxValue());
     }
 
     public BigInteger getNextValFromSegmentBuffer(final SegmentBuffer buffer) {
+        long start = System.currentTimeMillis();
         while (true) {
             buffer.rLock().lock();
             try {
@@ -165,10 +160,8 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                         Segment next = buffer.getSegments()[buffer.nextPos()];
                         boolean updateOk = false;
                         try {
-                            buffer.wLock().lock();
-                            updateSegmentFromDb(buffer.getSequenceName(), next);
-                            updateOk = true;
-                            if (logger.isInfoEnabled()) {
+                            updateOk = updateSegmentFromDb(buffer.getSequenceName(), next);
+                            if (updateOk && logger.isInfoEnabled()) {
                                 logger.info("update segment {} from db {}", buffer.getSequenceName(), next);
                             }
                         } catch (SequenceOutOfBoundsException e) {
@@ -181,6 +174,7 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                                 logger.warn(buffer.getSequenceName() + " updateSegmentFromDb exception", e);
                             }
                         } finally {
+                            buffer.wLock().lock();
                             buffer.getThreadRunning().set(false);
                             if (updateOk) {
                                 buffer.setNextReady(true);
@@ -192,6 +186,9 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                 BigInteger value = segment.getNextValueAndUpdate();
                 if (value.compareTo(segment.getSegmentMaxValue()) <= 0) {
                     return value;
+                }
+                if (System.currentTimeMillis() - start > SEQUENCE_TIME_OUT_PERIOD) {
+                    throw new SequenceTimeOutException(buffer.getSequenceName());
                 }
             } finally {
                 buffer.rLock().unlock();
@@ -207,6 +204,8 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                 if (buffer.isNextReady()) {
                     buffer.switchPos();
                     buffer.setNextReady(false);
+                } else if (System.currentTimeMillis() - start > SEQUENCE_TIME_OUT_PERIOD) {
+                    throw new SequenceTimeOutException(buffer.getSequenceName());
                 }
             } finally {
                 buffer.wLock().unlock();

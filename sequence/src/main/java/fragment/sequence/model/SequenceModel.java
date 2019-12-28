@@ -11,6 +11,7 @@ public class SequenceModel implements Serializable {
     private BigInteger minValue;
     private BigInteger maxValue;
     private boolean cycleFlag;
+    private boolean dynamicSize;
     private BigInteger lastNumber;
     private BigInteger segmentSize;
 
@@ -62,4 +63,11 @@ public class SequenceModel implements Serializable {
         this.segmentSize = segmentSize;
     }
 
+    public boolean isDynamicSize() {
+        return dynamicSize;
+    }
+
+    public void setDynamicSize(boolean dynamicSize) {
+        this.dynamicSize = dynamicSize;
+    }
 }
