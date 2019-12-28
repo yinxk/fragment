@@ -40,10 +40,37 @@ public class SequenceGenServiceTest {
     private List<String> seqNameList = new ArrayList<>();
 
     @Before
-    public void beforeClass() {
+    public void before() {
         seqNameList = sequenceDao.findAllSequenceName();
+        seqNameList.removeIf(s -> s.equals("testSequence-1"));
     }
 
+    @Test
+    public void insertSql() {
+        String s = "INSERT INTO seq_sequence(sequence_name, min_value, max_value, cycle_flag, last_number, segment_size, dynamic_size) VALUES ('%s', 1, 99999999999999999999999999999999, b'%s', 0, %s, %s);";
+        int i = -1;
+        int step = 1;
+        while (true) {
+            if (i < 0) {
+                System.out.println(String.format(s, "testSequence" + i, 1, i, 1));
+            } else {
+                System.out.println(String.format(s, "testSequence" + i, 0, i, 1));
+            }
+            i += step;
+            if (i >= 10) {
+                int t = i / 10;
+                while (t >= 10) {
+                    t = t / 10;
+                }
+                if (t == 1) {
+                    step = i;
+                }
+            }
+            if (i > 50_0000) {
+                break;
+            }
+        }
+    }
 
     @Test
     @PerfTest(threads = 10, invocations = 60_0000)
@@ -71,7 +98,21 @@ public class SequenceGenServiceTest {
         verify(threadNumber, runTimes, sequenceNameSet);
     }
 
+    @Test
+    public void verifyCycle() {
+        int threadNumber = 40;
+        Random random = new Random();
+        int runTimes = random.nextInt(1000_0000) + 1000;
+        Set<String> sequenceNameSet = new HashSet<>();
+        sequenceNameSet.add("testSequence-1");
+        verify(threadNumber, runTimes, sequenceNameSet, true);
+    }
+
     private void verify(int threadNumber, int allRunTimes, Set<String> sequenceNameSet) {
+        verify(threadNumber, allRunTimes, sequenceNameSet, false);
+    }
+
+    private void verify(int threadNumber, int allRunTimes, Set<String> sequenceNameSet, boolean cycle) {
         Random random = new Random();
         String[] sequenceNames = new String[sequenceNameSet.size()];
         sequenceNameSet.toArray(sequenceNames);
@@ -121,7 +162,7 @@ public class SequenceGenServiceTest {
 
         int realAllRunTimes = 0;
         List<String> seqNames = new ArrayList<>(countsMap.keySet());
-        seqNames.sort(Comparator.comparingInt(o -> Integer.parseInt(o.substring(7))));
+        seqNames.sort(Comparator.comparingInt(o -> Integer.parseInt(o.substring(12))));
         for (String sequenceName : seqNames) {
             System.out.println("=========序列名: " + sequenceName + "  信息开始=========");
             BigInteger max = BigInteger.ZERO;
@@ -143,8 +184,12 @@ public class SequenceGenServiceTest {
             System.out.println("maxBigInteger:" + max);
             System.out.println("=========序列名: " + sequenceName + "  信息结束=========");
             realAllRunTimes += num;
-            Assert.assertEquals(1, countToCounts.size());
-            // Assert.assertEquals(runTimesMap.get(sequenceName).intValue(), countToCounts.get(1).get());
+            if (cycle) {
+                Assert.assertTrue(1 <= countToCounts.size() && countToCounts.size() <= 2);
+            } else {
+                Assert.assertEquals(1, countToCounts.size());
+                // Assert.assertEquals(runTimesMap.get(sequenceName).intValue(), countToCounts.get(1).get());
+            }
         }
 
         System.out.println("==========");

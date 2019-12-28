@@ -8,8 +8,8 @@ public class Segment {
     private final static BigInteger STEP = BigInteger.ONE;
     private final static BigInteger MIN_SEGMENT_SIZE = new BigInteger("100");
     private final static BigInteger MAX_SEGMENT_SIZE = new BigInteger("600000");
-    private final static BigInteger DIVISOR = new BigInteger("2");
-    private static final long SEGMENT_DURATION = 20 * 60 * 1000L;
+    private final static float IDLE_SCALE = 0.8f;
+    private final static long SEGMENT_DURATION = 20 * 60 * 1000L;
     private final static BigInteger LOAD_FACTOR = new BigInteger("2");
     private volatile BigInteger lastValue = BigInteger.ZERO;
     private volatile BigInteger segmentSize = BigInteger.ZERO;
@@ -68,7 +68,7 @@ public class Segment {
             segmentMaxValue = maxValue;
         }
         this.segmentSize = this.buffer.getSize();
-        idleNumber = segmentSize.divide(DIVISOR);
+        idleNumber = new BigInteger(String.valueOf((int) (segmentSize.intValue() * IDLE_SCALE)));
     }
 
     public synchronized BigInteger getNextValueAndUpdate() {
