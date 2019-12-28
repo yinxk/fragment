@@ -1,5 +1,6 @@
 package fragment.sequence.model;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -7,7 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SegmentBuffer {
-    private String sequenceName;
+    private final String sequenceName;
     private final Segment[] segments;
     private volatile int currentPos;
     private volatile boolean nextReady;
@@ -15,8 +16,11 @@ public class SegmentBuffer {
     private final AtomicBoolean threadRunning;
     private final ReadWriteLock lock;
     private volatile boolean valueOutOfBounds;
+    private volatile BigInteger size;
+    private volatile BigInteger dbSize;
+    private volatile long updateTimestamp;
 
-    public SegmentBuffer() {
+    public SegmentBuffer(String sequenceName) {
         segments = new Segment[]{new Segment(this), new Segment(this)};
         currentPos = 0;
         nextReady = false;
@@ -24,14 +28,11 @@ public class SegmentBuffer {
         threadRunning = new AtomicBoolean(false);
         lock = new ReentrantReadWriteLock();
         valueOutOfBounds = false;
+        this.sequenceName = sequenceName;
     }
 
     public String getSequenceName() {
         return sequenceName;
-    }
-
-    public void setSequenceName(String sequenceName) {
-        this.sequenceName = sequenceName;
     }
 
     public Segment[] getSegments() {
@@ -90,6 +91,30 @@ public class SegmentBuffer {
         this.valueOutOfBounds = valueOutOfBounds;
     }
 
+    public BigInteger getSize() {
+        return size;
+    }
+
+    public void setSize(BigInteger size) {
+        this.size = size;
+    }
+
+    public BigInteger getDbSize() {
+        return dbSize;
+    }
+
+    public void setDbSize(BigInteger dbSize) {
+        this.dbSize = dbSize;
+    }
+
+    public long getUpdateTimestamp() {
+        return updateTimestamp;
+    }
+
+    public void setUpdateTimestamp(long updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
+    }
+
     @Override
     public String toString() {
         return "SegmentBuffer{" +
@@ -99,6 +124,10 @@ public class SegmentBuffer {
                 ", nextReady=" + nextReady +
                 ", initOk=" + initOk +
                 ", threadRunning=" + threadRunning +
+                ", valueOutOfBounds=" + valueOutOfBounds +
+                ", size=" + size +
+                ", dbSize=" + dbSize +
+                ", updateTimestamp=" + updateTimestamp +
                 '}';
     }
 }
