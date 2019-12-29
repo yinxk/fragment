@@ -183,9 +183,10 @@ public class SequenceGenServiceImpl implements SequenceGenService {
                         }
                     });
                 }
-                BigInteger value = segment.getNextValueAndUpdate();
-                if (value.compareTo(segment.getSegmentMaxValue()) <= 0) {
-                    return value;
+                synchronized (segment) {
+                    if (segment.getLastValue().compareTo(segment.getSegmentMaxValue()) < 0) {
+                        return segment.getNextValueAndUpdate();
+                    }
                 }
                 if (System.currentTimeMillis() - start > SEQUENCE_TIME_OUT_PERIOD) {
                     throw new SequenceTimeOutException(buffer.getSequenceName());
@@ -197,9 +198,10 @@ public class SequenceGenServiceImpl implements SequenceGenService {
             buffer.wLock().lock();
             try {
                 final Segment segment = buffer.getCurrent();
-                BigInteger value = segment.getNextValueAndUpdate();
-                if (value.compareTo(segment.getSegmentMaxValue()) <= 0) {
-                    return value;
+                synchronized (segment) {
+                    if (segment.getLastValue().compareTo(segment.getSegmentMaxValue()) < 0) {
+                        return segment.getNextValueAndUpdate();
+                    }
                 }
                 if (buffer.isNextReady()) {
                     buffer.switchPos();

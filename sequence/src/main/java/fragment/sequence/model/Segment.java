@@ -71,7 +71,7 @@ public class Segment {
         idleNumber = new BigInteger(String.valueOf((int) (segmentSize.intValue() * IDLE_SCALE)));
     }
 
-    public synchronized BigInteger getNextValueAndUpdate() {
+    public BigInteger getNextValueAndUpdate() {
         lastValue = lastValue.add(STEP);
         return lastValue;
     }
