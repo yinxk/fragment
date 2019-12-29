@@ -211,7 +211,7 @@ public class SequenceGenServiceTest {
             AtomicInteger exceptionTimes =
                     Optional.ofNullable(exceptionMap.get(sequenceName)).orElse(new AtomicInteger(0));
             System.out.println("runTimes:" + name2RunTimesMap.get(sequenceName));
-            System.out.println("successRunTimes:" + valueCount2Counts.get(1).get());
+            System.out.println("successRunTimes:" + successRunTimes);
             System.out.println("exceptionRunTimes:" + exceptionTimes);
             System.out.println("maxValue:" + maxValue);
             System.out.println("<<<<<<<<< sequence: " + sequenceName + "  info end <<<<<<<<<");
