@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.databene.contiperf.PerfTest;
 import org.databene.contiperf.junit.ContiPerfRule;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import fragment.sequence.SequenceApplication;
 import fragment.sequence.dao.SequenceDao;
@@ -41,6 +41,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = SequenceApplication.class)
 @RunWith(SpringRunner.class)
 @Slf4j
+@Transactional
 public class SequenceGenServiceTest {
 
     @Autowired
@@ -58,12 +59,6 @@ public class SequenceGenServiceTest {
     public void before() {
         seqNameList = sequenceDao.findAllSequenceName();
         seqNameList.removeIf(s -> s.equals("testSequence-1"));
-    }
-
-    @After
-    public void after() {
-        String sql = "UPDATE seq_sequence SET last_number = 0 WHERE sequence_name LIKE 'testSequence%'";
-        jdbcTemplate.update(sql);
     }
 
     @Test
