@@ -25,7 +25,6 @@
         <module>fragment-scheme</module>
         <module>read</module>
         <module>sequence</module>
-        <module>db</module>
     </modules>
 
     <dependencies>
