@@ -1,17 +1,18 @@
 package cloud.provider.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import cloud.base.response.BaseResponse;
 import cloud.base.response.dto.Car;
 import cloud.base.response.dto.DrivingLicense;
 import cloud.base.response.dto.UserInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TestController {
 
     @GetMapping("/info")
-    public BaseResponse testReturnObject() {
+    public BaseResponse<UserInfo> testReturnObject() {
         DrivingLicense drivingLicense = new DrivingLicense();
         drivingLicense.setIdNumber("testIdNumber");
         drivingLicense.setName("testDrivingName");
