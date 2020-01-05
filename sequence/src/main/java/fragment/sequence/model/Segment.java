@@ -98,11 +98,7 @@ public class Segment {
 
     @Override
     public String toString() {
-        return "Segment{" +
-                "lastValue=" + lastValue +
-                ", segmentSize=" + segmentSize +
-                ", segmentMaxValue=" + segmentMaxValue +
-                ", idleNumber=" + idleNumber +
-                '}';
+        return "Segment{" + "lastValue=" + lastValue + ", segmentSize=" + segmentSize + ", segmentMaxValue="
+                + segmentMaxValue + ", idleNumber=" + idleNumber + '}';
     }
 }
