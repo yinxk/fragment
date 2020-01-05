@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class SegmentBuffer {
     private final String sequenceName;
     private final Segment[] segments;
