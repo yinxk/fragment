@@ -1,5 +1,7 @@
 package fragment.sequence.service;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -34,13 +36,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import fragment.sequence.SequenceApplication;
 import fragment.sequence.dao.SequenceDao;
 import fragment.sequence.exception.SequenceException;
-import lombok.extern.slf4j.Slf4j;
-
-import static org.junit.Assert.*;
 
 @SpringBootTest(classes = SequenceApplication.class)
 @RunWith(SpringRunner.class)
-@Slf4j
 public class SequenceGenServiceTest {
 
     @Autowired
