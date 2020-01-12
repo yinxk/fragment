@@ -1,6 +1,7 @@
 package nowcoder.coding.interviews;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 /*
 在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，
@@ -83,10 +84,14 @@ public class TwoArray {
         if (array == null || array.length < 1 || array[0].length < 1) {
             return false;
         }
-        return find0(target, array, 0, 0, array.length - 1, array[0].length - 1) > 0;
+        AtomicLong runTimes = new AtomicLong(0);
+        int find = find0(target, array, 0, 0, array.length - 1, array[0].length - 1, runTimes);
+        System.out.println("runTimes:" + runTimes.get());
+        return find > 0;
     }
     
-    public static int find0(int target, int[][] array, int row1, int col1, int row2, int col2) {
+    public static int find0(int target, int[][] array, int row1, int col1, int row2, int col2, AtomicLong runTimes) {
+        runTimes.getAndIncrement();
         if (target < array[row1][col1]) {
             return 0;
         }
@@ -96,6 +101,7 @@ public class TwoArray {
         if (row2 - row1 <= 1 && col2 - col1 <= 1) {
             for (int i = row1; i <= row2; i++) {
                 for (int j = col1; j <= col2; j++) {
+                    runTimes.incrementAndGet();
                     if (array[i][j] == target) {
                         return 1;
                     }
@@ -115,6 +121,7 @@ public class TwoArray {
         int rowColAllNotChangeTime = 0;
         boolean isCeil = false;
         while (true) {
+            runTimes.incrementAndGet();
             rowMid = (rowStart + rowEnd) / 2;
             colMid = (colStart + colEnd) / 2;
             if (isCeil) {
@@ -164,13 +171,13 @@ public class TwoArray {
         System.out.println("rowStart:" + rowStart + " colStart:" + colStart);
         System.out.println("rowEnd:" + rowEnd + " colEnd:" + colEnd);
         if (rowEnd - row1 - 1 >= 0) {
-            int count = find0(target, array, row1, colEnd, rowEnd - 1, col2);
+            int count = find0(target, array, row1, colEnd, rowEnd - 1, col2, runTimes);
             if (count > 0) {
                 return count;
             }
         }
         if (row2 - rowStart - 1 >= 0) {
-            return find0(target, array, rowStart + 1, col1, row2, colStart);
+            return find0(target, array, rowStart + 1, col1, row2, colStart, runTimes);
         }
         return 0;
     }
