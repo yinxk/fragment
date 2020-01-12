@@ -9,10 +9,10 @@ package nowcoder.coding.interviews;
  */
 public class ReConstructBinaryTree {
     public static void main(String[] args) {
-        // int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
-        // int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
-        int[] pre = {1, 2, 3, 4};
-        int[] in = {4, 3, 2, 1};
+        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
+        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
+        // int[] pre = {1, 2, 3, 4};
+        // int[] in = {4, 3, 2, 1};
         TreeNode treeNode = reConstructBinaryTree(pre, in);
         System.out.println(treeNode);
         
@@ -24,33 +24,21 @@ public class ReConstructBinaryTree {
                 || pre.length != in.length || pre.length == 0) {
             return null;
         }
-        int index = 0;
-        TreeNode head = new TreeNode(pre[index]);
-        int valIndex = getTargetIndexFromArray(pre[0], in, 0, in.length - 1);
-        if (valIndex > 0) {
-            index = reConstructBinaryTree(head, pre, in, index + 1, 0, valIndex - 1, valIndex);
-        }
-        if (in.length - 1 - valIndex > 0) {
-            reConstructBinaryTree(head, pre, in, index + 1, valIndex + 1, in.length - 1, valIndex);
-        }
-        return head;
+        
+        return reConstructBinaryTree(pre, 0, in, 0, in.length - 1);
     }
     
-    public static int reConstructBinaryTree(TreeNode parent, int[] pre, int[] in, int index, int inLeft, int inRight, int bound) {
-        int valIndex = getTargetIndexFromArray(pre[index], in, inLeft, inRight);
-        TreeNode next = new TreeNode(pre[index]);
-        if (valIndex < bound) {
-            parent.left = next;
-        } else {
-            parent.right = next;
+    public static TreeNode reConstructBinaryTree(int[] pre, int startIndex, int[] in, int inLeft, int inRight) {
+        int val = pre[startIndex];
+        int index = getTargetIndexFromArray(val, in, inLeft, inRight);
+        TreeNode parent = new TreeNode(val);
+        if (index - inLeft > 0) {
+            parent.left = reConstructBinaryTree(pre, startIndex + 1, in, inLeft, index - 1);
         }
-        if (valIndex - inLeft > 0) {
-            index = reConstructBinaryTree(next, pre, in, index + 1, inLeft, valIndex - 1, valIndex);
+        if (inRight - index > 0) {
+            parent.right = reConstructBinaryTree(pre, index - inLeft + startIndex + 1, in, index + 1, inRight);
         }
-        if (inRight - valIndex > 0) {
-            return reConstructBinaryTree(next, pre, in, index + 1, valIndex + 1, inRight, valIndex);
-        }
-        return index;
+        return parent;
     }
     
     public static int getTargetIndexFromArray(int target, int[] arr, int left, int right) {
