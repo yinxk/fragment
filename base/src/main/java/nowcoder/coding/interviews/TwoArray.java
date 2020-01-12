@@ -12,8 +12,8 @@ public class TwoArray {
     
     public static void main(String[] args) {
         int reRunTimes = 10;
-        int rowBound = 10000;
-        int colBound = 10000;
+        int rowBound = 20000;
+        int colBound = 20000;
         int start = 1;
         int stepBound = 5;
         for (int i = 0; i < reRunTimes; i++) {
@@ -117,8 +117,86 @@ public class TwoArray {
         } else {
             System.err.println(s);
         }
+        
+        actual = findEachRowWithBinary(target, array);
+        s = String.format("target:%s expect:%s actual:%s", target, hasTarget, actual);
+        if (hasTarget == actual) {
+            System.out.println(s);
+        } else {
+            System.err.println(s);
+        }
+        
+        actual = findFromTopRightCorner(target, array);
+        s = String.format("target:%s expect:%s actual:%s", target, hasTarget, actual);
+        if (hasTarget == actual) {
+            System.out.println(s);
+        } else {
+            System.err.println(s);
+        }
         System.out.println("===================================================================");
     }
+    
+    /*
+        两种思路
+            一种是：
+            把每一行看成有序递增的数组，
+            利用二分查找，
+            通过遍历每一行得到答案，
+            时间复杂度是nlogn
+     */
+    public static boolean findEachRowWithBinary(int target, int[][] array) {
+        AtomicLong runTimes = new AtomicLong(0);
+        int low;
+        int high;
+        int mid;
+        for (int[] ints : array) {
+            low = 0;
+            high = ints.length - 1;
+            while (low <= high) {
+                runTimes.incrementAndGet();
+                mid = (low + high) / 2;
+                if (target > ints[mid])
+                    low = mid + 1;
+                else if (target < ints[mid])
+                    high = mid - 1;
+                else {
+                    System.out.println("findEachRowToBinary runTimes:" + runTimes.get());
+                    return true;
+                }
+            }
+        }
+        System.out.println("findEachRowToBinary runTimes:" + runTimes.get());
+        return false;
+    }
+    
+    /*
+        另外一种思路是：
+            利用二维数组由上到下，由左到右递增的规律，
+            那么选取右上角或者左下角的元素a[row][col]与target进行比较，
+            当target小于元素a[row][col]时，那么target必定在元素a所在行的左边,
+            即col--；
+            当target大于元素a[row][col]时，那么target必定在元素a所在列的下边,
+            即row++；
+     */
+    public static boolean findFromTopRightCorner(int target, int[][] array) {
+        AtomicLong runTimes = new AtomicLong(0);
+        int row = 0;
+        int col = array[0].length - 1;
+        while (row <= array.length - 1 && col >= 0) {
+            runTimes.incrementAndGet();
+            if (target > array[row][col])
+                row++;
+            else if (target < array[row][col])
+                col--;
+            else {
+                System.out.println("findFromTopRightCorner runTimes:" + runTimes.get());
+                return true;
+            }
+        }
+        System.out.println("findFromTopRightCorner runTimes:" + runTimes.get());
+        return false;
+    }
+    
     
     public static boolean find(int target, int[][] array) {
         // for (int i = 0; i < array.length; i++) {
