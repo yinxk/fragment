@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 每一列都按照从上到下递增的顺序排序。
 请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数
  */
-public class TwoArray {
+public class FindANumberIsInDyadicArray {
     
     public static void main(String[] args) {
         int reRunTimes = 10;
