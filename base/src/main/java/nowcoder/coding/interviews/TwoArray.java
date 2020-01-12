@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class TwoArray {
     
     public static void main(String[] args) {
-        int reRunTimes = 3;
-        int rowBound = 500;
-        int colBound = 500;
+        int reRunTimes = 10;
+        int rowBound = 10000;
+        int colBound = 10000;
         int start = 1;
         int stepBound = 5;
         for (int i = 0; i < reRunTimes; i++) {
@@ -103,13 +103,14 @@ public class TwoArray {
         //         , {58, 61, 66, 69, 73, 75, 82, 83, 89, 92, 95, 97, 100, 102, 104, 106, 109, 111, 116, 118, 122, 128, 131, 134, 137, 139, 142, 148, 149, 152, 155, 158, 161, 164, 165, 168, 170, 171, 174, 176, 179, 182, 184, 186, 188, 190, 195, 196, 199, 202, 204, 206, 209, 211, 214, 216, 220, 223, 224, 227, 232, 234, 236, 237, 240, 242, 244, 247, 254, 256}
         //
         // };
-        for (int[] ints : array) {
-            for (int anInt : ints) {
-                System.out.print(String.format("%-8s", anInt));
-            }
-            System.out.println();
-        }
+        // for (int[] ints : array) {
+        //     for (int anInt : ints) {
+        //         System.out.print(String.format("%-8s", anInt));
+        //     }
+        //     System.out.println();
+        // }
         boolean actual = find(target, array);
+        System.out.println("row: " + row + "    col: " + col);
         String s = String.format("target:%s expect:%s actual:%s", target, hasTarget, actual);
         if (hasTarget == actual) {
             System.out.println(s);
@@ -238,11 +239,12 @@ public class TwoArray {
             .       .       .       *       .       .       *
                              (row2,colStart)            (row2,col2)
                              
+            未查找到
             可以确定: target在点(rowStart,colStart) 和 点(rowEnd,colEnd) 之间
                排除: 点(row1,col1) 到 点(rowStart,colStart) 之间区域的值
                     点(rowEnd,colEnd) 到 点(row2,col2) 之间区域的值
                                                         
-            点(rowStart,colStart)和点(rowEnd,colEnd)存在3种形状
+            点(rowStart,colStart)和点(rowEnd,colEnd)存在4种形状
             1:
             *
                     *
@@ -252,6 +254,10 @@ public class TwoArray {
             
             3:
                     *
+            *
+            
+            4:
+            *
             *
          */
         if (rowEnd - row1 - 1 >= 0) {
