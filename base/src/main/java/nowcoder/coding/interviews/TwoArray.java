@@ -145,6 +145,7 @@ public class TwoArray {
         if (target > array[row2][col2]) {
             return 0;
         }
+        // 矩形缩减到特别小的时候, 直接遍历
         if (row2 - row1 <= 1 && col2 - col1 <= 1) {
             for (int i = row1; i <= row2; i++) {
                 for (int j = col1; j <= col2; j++) {
@@ -171,6 +172,7 @@ public class TwoArray {
             runTimes.incrementAndGet();
             rowMid = (rowStart + rowEnd) / 2;
             colMid = (colStart + colEnd) / 2;
+            // 尝试向上去整查找
             if (isCeil) {
                 if (rowMid < rowEnd) {
                     rowMid += 1;
@@ -217,6 +219,41 @@ public class TwoArray {
         }
         System.out.println("rowStart:" + rowStart + " colStart:" + colStart);
         System.out.println("rowEnd:" + rowEnd + " colEnd:" + colEnd);
+        /*
+        (row1,col1)                   (row1,colEnd)
+            *       .       .       .       *       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+                            (rowStart,colStart)
+            .       .       .       *       .       .       *(rowEnd-1,col2)
+   (rowStart+1,col1)                 (rowEnd,colEnd)
+            *       .       .       .       *       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+            .       .       .       .       .       .       .
+            .       .       .       *       .       .       *
+                             (row2,colStart)            (row2,col2)
+                             
+            可以确定: target在点(rowStart,colStart) 和 点(rowEnd,colEnd) 之间
+               排除: 点(row1,col1) 到 点(rowStart,colStart) 之间区域的值
+                    点(rowEnd,colEnd) 到 点(row2,col2) 之间区域的值
+                                                        
+            点(rowStart,colStart)和点(rowEnd,colEnd)存在3种形状
+            1:
+            *
+                    *
+                    
+            2:
+            *       *
+            
+            3:
+                    *
+            *
+         */
         if (rowEnd - row1 - 1 >= 0) {
             int count = find0(target, array, row1, colEnd, rowEnd - 1, col2, runTimes);
             if (count > 0) {
