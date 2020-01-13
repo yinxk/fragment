@@ -1,5 +1,8 @@
 package nowcoder.coding.interviews;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /*
 
 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
@@ -14,7 +17,7 @@ public class ReConstructBinaryTree {
         // int[] pre = {1, 2, 3, 4};
         // int[] in = {4, 3, 2, 1};
         TreeNode treeNode = reConstructBinaryTree(pre, in);
-        System.out.println(treeNode);
+        printBinaryTree(treeNode);
         
         
     }
@@ -50,9 +53,74 @@ public class ReConstructBinaryTree {
         return -1;
     }
     
+    static char space = ' ';
+    static int stepLength = 4;
+    
+    public static void printBinaryTree(final TreeNode root) {
+        int level = calBinaryTreeLevel(root);
+        calNumberAndLevelInFullBinaryTree(root, 1, 1);
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode ite = root;
+        queue.offer(ite);
+        while (!queue.isEmpty()) {
+            ite = queue.poll();
+            if (ite == null) continue;
+            queue.offer(ite.left);
+            queue.offer(ite.right);
+        }
+        level = 6;
+        for (int i = 0; i < level; i++) {
+            int w = 1 << (level - i + 1);
+            for (int j = 0; j < 1 << i; j++) {
+                for (int k = 0; k < w - 1; k++) {
+                    System.out.print(" ");
+                }
+                System.out.print("o");
+                for (int k = 0; k < w; k++) {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+            
+        }
+        
+        
+        StringBuilder str = new StringBuilder();
+        
+        
+        System.out.println(str.toString());
+        
+        
+    }
+    
+    public static void appendXSpace(int x, StringBuilder str) {
+        for (int i = 0; i < x; i++) {
+            str.append(space);
+        }
+    }
+    
+    public static void calNumberAndLevelInFullBinaryTree(final TreeNode node, final int number, final int level) {
+        if (node == null) return;
+        node.number = number;
+        node.level = level;
+        
+        calNumberAndLevelInFullBinaryTree(node.left, number * 2, level + 1);
+        calNumberAndLevelInFullBinaryTree(node.right, number * 2 + 1, level + 1);
+    }
+    
+    public static int calBinaryTreeLevel(final TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(calBinaryTreeLevel(root.left) + 1, calBinaryTreeLevel(root.right) + 1);
+    }
     
     public static class TreeNode {
         int val;
+        /**
+         * 在满二叉树中, 节点的编号
+         */
+        int number;
+        int level;
+        int x;
         TreeNode left;
         TreeNode right;
         
