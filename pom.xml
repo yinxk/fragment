@@ -25,6 +25,7 @@
         <module>fragment-scheme</module>
         <module>read</module>
         <module>sequence</module>
+        <module>nand2tetris</module>
     </modules>
 
     <dependencies>
