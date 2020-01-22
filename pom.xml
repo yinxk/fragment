@@ -26,6 +26,7 @@
         <module>read</module>
         <module>sequence</module>
         <module>nand2tetris</module>
+        <module>code-generator</module>
     </modules>
 
     <dependencies>
