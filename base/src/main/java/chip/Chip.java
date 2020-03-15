@@ -19,8 +19,10 @@ public class Chip {
     public static void main(String[] args) {
         
         
-        testHashMapPut();
-        
+        // testHashMapPut();
+        for (int i = 0; i < 16; i++) {
+            System.out.printf("FullAdder(a=a[%s],b=b[%s],c=c%s,sum=out[%s],carry=c%s);\n", i, i, i-1,i,i);
+        }
         
     }
 }
