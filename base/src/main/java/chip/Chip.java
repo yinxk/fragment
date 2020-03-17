@@ -21,7 +21,7 @@ public class Chip {
         
         // testHashMapPut();
         for (int i = 0; i < 16; i++) {
-            System.out.printf("FullAdder(a=a[%s],b=b[%s],c=c%s,sum=out[%s],carry=c%s);\n", i, i, i-1,i,i);
+            System.out.printf("DMux(in=in[%s], sel=sel, a=a[%s] ,b=b[%s]);\n", i, i, i);
         }
         
     }
