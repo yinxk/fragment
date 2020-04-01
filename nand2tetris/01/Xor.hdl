@@ -14,6 +14,17 @@ CHIP Xor {
 
     PARTS:
     // Put your code here:
+    /*
+     * 真值表:
+     * a b o
+     * 0 0 0
+     * 0 1 1  `ab
+     * 1 0 1  a`b
+     * 1 1 0
+     *
+     * ==> `ab + a`b
+     */
+    // 这里是当时自己斗出来的
     Nand(a=a,b=b,out=o1);
     Or(a=a,b=b,out=o2);
     And(a=o1,b=o2,out=out);
