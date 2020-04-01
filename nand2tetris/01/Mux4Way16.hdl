@@ -17,6 +17,18 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
+    /*
+     * a if sel == 00
+     * b if sel == 01
+     * c if sel == 10
+     * d if sel == 11
+     * 分组, sel[0]选择一组中的第0个或第1个, sel[1]选择组, 如下两组
+     * a
+     * b
+     *
+     * c
+     * d
+     */
     Mux16(a = a, b = b, sel = sel[0], out = o1);
     Mux16(a = c, b = d, sel = sel[0], out = o2);
 
