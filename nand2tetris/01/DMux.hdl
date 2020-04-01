@@ -15,6 +15,14 @@ CHIP DMux {
 
     PARTS:
     // Put your code here:
+    /*
+     * 真值表:
+     * i s  a b
+     * 0 0  0 0
+     * 1 0  1 0   ==> a: i`s
+     * 0 1  0 0
+     * 1 1  0 1   ==> b: is
+     */
     Not(in=sel,out=nsel);
     And(a=in,b=nsel,out=a);
     And(a=in,b=sel,out=b);
