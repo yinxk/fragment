@@ -1,0 +1,9 @@
+executor:
+  core-pool-size: 20
+  max-pool-size: 200
+  queue-capacity: 20
+  keep-alive-seconds: 60
+  waitForTasksToCompleteOnShutdown: true
+  await-termination-seconds: 60
+  thread-name-prefix: Thread-Async-
+  rejected-execution-handler: java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy
