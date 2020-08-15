@@ -54,7 +54,7 @@ public class MyInteger {
         int length = data.length;
         boolean firstNotZero = false;
         for (int i = length - 1; i >= 0; i--) {
-            if (data[i] != 0) {
+            if (!firstNotZero && data[i] != 0) {
                 firstNotZero = true;
             }
             if (firstNotZero) {
