@@ -124,7 +124,7 @@ public class FactorialTest {
             end = System.nanoTime();
             calValidLengthTime.addAndGet(end - start);
             nextCLength = aValidLength + bValidLength;
-            if (nextCLength > c.length) {
+            if (nextCLength >= c.length) {
                 start = System.nanoTime();
                 temp = b;
                 storeLength = nextCLength << 1;
@@ -157,12 +157,14 @@ public class FactorialTest {
     public static void multiply(int[] a, int aValidLength, int[] b, int bValidLength, int[] c) {
         for (int i = 0; i < aValidLength; i++) {
             for (int j = 0; j < bValidLength; j++) {
-                int cIndex = i + j;
-                int cDigit = c[cIndex] + a[i] * b[j];
-                int cCarryIndex = cIndex + 1;
-                c[cIndex] = cDigit % 10;
-                c[cCarryIndex] += cDigit / 10;
+                c[i + j] += a[i] * b[j];
             }
+        }
+        int cLength = aValidLength + bValidLength;
+        for (int i = 0; i < cLength; i++) {
+            int cDigit = c[i];
+            c[i] = cDigit % 10;
+            c[i + 1] += cDigit / 10;
         }
     }
 
