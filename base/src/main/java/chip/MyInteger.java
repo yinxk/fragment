@@ -1,12 +1,21 @@
 package chip;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class MyInteger {
 
 
     final int[] data;
 
+    public static final AtomicLong newIntArrayTime = new AtomicLong(0);
+
+    public static final AtomicLong mulTime = new AtomicLong(0);
+
+    public static final AtomicLong consTime = new AtomicLong(0);
+
 
     public MyInteger(int value) {
+        long start = System.nanoTime();
         if (value <= 0) {
             throw new IllegalArgumentException();
         }
@@ -22,6 +31,7 @@ public class MyInteger {
             data[i] = (value % 10);
             value = value / 10;
         }
+        consTime.addAndGet(System.nanoTime() - start);
     }
 
     private MyInteger(int[] data) {
@@ -34,9 +44,13 @@ public class MyInteger {
         int lenA = a.length;
         int lenB = b.length;
         int lenRes = lenA + lenB;
+        long start = System.nanoTime();
         int[] res = new int[lenRes];
         MyInteger resInt = new MyInteger(res);
+        long end = System.nanoTime();
+        newIntArrayTime.addAndGet(end - start);
 
+        start = System.nanoTime();
         for (int i = 0; i < lenB; i++) {
             for (int j = 0; j < lenA; j++) {
                 int cIndex = i + j;
@@ -45,6 +59,8 @@ public class MyInteger {
                 res[cIndex + 1] += resBit / 10;
             }
         }
+        end = System.nanoTime();
+        mulTime.addAndGet(end - start);
         return resInt;
     }
 
@@ -61,6 +77,8 @@ public class MyInteger {
                 strBuilder.append(data[i]);
             }
         }
-        return strBuilder.toString();
+        return /*strBuilder.toString() +*/ String.format("构造消耗时间: %20s, new array消耗时间: %20s, mul" +
+                "计算消耗时间: " +
+                "%20s", consTime, newIntArrayTime, mulTime);
     }
 }
