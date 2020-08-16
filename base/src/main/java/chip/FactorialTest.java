@@ -1,5 +1,7 @@
 package chip;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -148,11 +150,12 @@ public class FactorialTest {
         }
 
         // return toString(b);
-        return String.format("构造消耗时间: %20s, new array消耗时间: %20s, mul" +
+        return toString(b) + String.format(" 构造消耗时间: %20s, new array消耗时间: %20s, mul" +
                         "计算消耗时间: " +
                         "%20s, validLength time: %20s, reset time: %20s", consTime, newIntArrayTime,
                 mulTime, calValidLengthTime, resetTime);
     }
+
 
     public static void multiply(int[] a, int aValidLength, int[] b, int bValidLength, int[] c) {
         for (int i = 0; i < aValidLength; i++) {
@@ -163,8 +166,8 @@ public class FactorialTest {
         int cLength = aValidLength + bValidLength;
         for (int i = 0; i < cLength; i++) {
             int cDigit = c[i];
-            c[i] = cDigit % 10;
-            c[i + 1] += cDigit / 10;
+            c[i] = cDigit & 15;
+            c[i + 1] += cDigit >> 4;
         }
     }
 
@@ -173,8 +176,8 @@ public class FactorialTest {
         int length = data.length;
         int validLength = 0;
         for (int i = 0; v > 0 && i < length; i++) {
-            data[i] = v % 10;
-            v = v / 10;
+            data[i] = v & 15;
+            v = v >> 4;
             validLength++;
         }
         return validLength;
@@ -193,30 +196,38 @@ public class FactorialTest {
                 return i + 1;
             }
         }
-        return 1;
+        return 0;
     }
 
     public static int calDecDigitLength(final int n) {
-        int x = 10;
+        int x = 16;
         int length = 1;
         while (n >= x) {
             length++;
-            x *= 10;
+            x *= 16;
         }
         return length;
     }
 
     public static String toString(int[] data) {
+        int validLength = calDecDigitLength(data);
+        List<Integer> mods = new ArrayList<>();
+        int lastMod = 0;
+        while (validLength > 0) {
+            for (int i = validLength - 1; i >= 0; i--) {
+                int theDigit = (lastMod << 4) + data[i];
+                data[i] = theDigit / 10;
+                lastMod = theDigit % 10;
+            }
+            mods.add(lastMod);
+            validLength = calDecDigitLength(data);
+            lastMod = 0;
+        }
+
         StringBuilder strBuilder = new StringBuilder();
-        int length = data.length;
-        boolean firstNotZero = false;
-        for (int i = length - 1; i >= 0; i--) {
-            if (!firstNotZero && data[i] != 0) {
-                firstNotZero = true;
-            }
-            if (firstNotZero) {
-                strBuilder.append(data[i]);
-            }
+        int size = mods.size();
+        for (int i = size - 1; i >= 0; i--) {
+            strBuilder.append(mods.get(i));
         }
         return strBuilder.toString();
     }

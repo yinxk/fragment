@@ -77,7 +77,7 @@ public class MyInteger {
                 strBuilder.append(data[i]);
             }
         }
-        return /*strBuilder.toString() +*/ String.format("构造消耗时间: %20s, new array消耗时间: %20s, mul" +
+        return strBuilder.toString() + String.format(" 构造消耗时间: %20s, new array消耗时间: %20s, mul" +
                 "计算消耗时间: " +
                 "%20s", consTime, newIntArrayTime, mulTime);
     }
