@@ -38,11 +38,11 @@ public class MyInteger {
         MyInteger resInt = new MyInteger(res);
 
         for (int i = 0; i < lenB; i++) {
-            int carry = 0;
             for (int j = 0; j < lenA; j++) {
-                int resBit = res[i + j] + a[j] * b[i] + carry;
-                res[i + j] = resBit % 10;
-                carry = resBit / 10;
+                int cIndex = i + j;
+                int resBit = res[cIndex] + a[j] * b[i];
+                res[cIndex] = resBit % 10;
+                res[cIndex + 1] += resBit / 10;
             }
         }
         return resInt;
