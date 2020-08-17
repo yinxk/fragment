@@ -85,7 +85,7 @@ public class Factorial {
     }
 
     public static int calValidDigitLength(final long[] data, final int start) {
-        int tStart = Math.min(data.length - 1, start);
+        int tStart = Math.min(data.length - 1, start - 1);
         for (int i = tStart; i >= 0; i--) {
             if (data[i] != 0) {
                 return i + 1;
