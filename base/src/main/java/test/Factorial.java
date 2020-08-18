@@ -78,7 +78,7 @@ public class Factorial {
     }
 
 
-    public static void multiply(long a, long[] b, final int bValidLength,
+    private static void multiply(long a, long[] b, final int bValidLength,
                                 long[] c) {
         for (int j = 0; j < bValidLength; j++) {
             long cDigit = c[j] + a * b[j];
@@ -87,13 +87,13 @@ public class Factorial {
         }
     }
 
-    public static void reset(final long[] data, int len) {
+    private static void reset(final long[] data, int len) {
         for (int i = 0; i < len; i++) {
             data[i] = 0;
         }
     }
 
-    public static int calValidDigitLength(final long[] data, final int start) {
+    private static int calValidDigitLength(final long[] data, final int start) {
         int tStart = Math.min(data.length - 1, start - 1);
         for (int i = tStart; i >= 0; i--) {
             if (data[i] != 0) {
@@ -109,7 +109,7 @@ public class Factorial {
      * @param data 大数数组
      * @return 十六进制字符串
      */
-    public static String toHexString(long[] data) {
+    private static String toHexString(long[] data) {
         int validLength = calValidDigitLength(data, data.length - 1);
         List<Long> mods = new ArrayList<>();
         long lastMod = 0;
@@ -141,7 +141,7 @@ public class Factorial {
      * @param data 大数数组
      * @return 十进制字符串
      */
-    public static String toDecString(long[] data) {
+    private static String toDecString(long[] data) {
         int validLength = calValidDigitLength(data, data.length - 1);
         List<Long> mods = new ArrayList<>();
         long lastMod = 0;
