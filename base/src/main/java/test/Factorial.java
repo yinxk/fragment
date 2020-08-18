@@ -79,7 +79,7 @@ public class Factorial {
 
 
     private static void multiply(long a, long[] b, final int bValidLength,
-                                long[] c) {
+                                 long[] c) {
         for (int j = 0; j < bValidLength; j++) {
             long cDigit = c[j] + a * b[j];
             c[j] = cDigit & MASK;
@@ -171,11 +171,8 @@ public class Factorial {
     private static final int SHIFT = 63 - N_MAX_SHIFT;
     private static final long N_MAX = 1L << N_MAX_SHIFT;
     private static final long SCALE = 1L << SHIFT;
-
     private static final long MASK = SCALE - 1L;
-
     private static final Map<Long, String> HEX_CHARS = new HashMap<>();
-
     static {
         HEX_CHARS.put(10L, "A");
         HEX_CHARS.put(11L, "B");
