@@ -149,7 +149,7 @@ public class Factorial {
             for (int i = validLength - 1; i >= 0; i--) {
                 long theDigit = (lastMod << SHIFT) + data[i];
                 // 这里和hex(2^n)方式不一样, 为了不增加判断条件, 选择冗余
-                // 效率很低
+                // 效率较低
                 data[i] = theDigit / 10;
                 lastMod = theDigit % 10;
             }
