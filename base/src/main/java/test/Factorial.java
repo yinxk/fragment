@@ -30,13 +30,10 @@ public class Factorial {
      * @param n     数字n
      * @param radix 结果以十进制或者十六进制表示
      * @return 阶乘结果十进制/十六进制字符串
-     * @throws IllegalArgumentException 当 n < 0时 or n > 16384
+     * @throws IllegalArgumentException 当 n < 0时 or n > {@link Factorial#N_MAX}
      */
     public static String factorial(int n, Radix radix) {
-        if (n < 0) {
-            throw new IllegalArgumentException();
-        }
-        if (n > N_MAX) {
+        if (n < 0 || n > N_MAX) {
             throw new IllegalArgumentException();
         }
         if (n == 0) {
@@ -74,12 +71,11 @@ public class Factorial {
             c = temp;
         }
 
-        return Radix.DEC == radix ? toDecString(b) : toHexString(b);
+        return Radix.HEX == radix ? toHexString(b) : toDecString(b);
     }
 
 
-    private static void multiply(long a, long[] b, final int bValidLength,
-                                 long[] c) {
+    private static void multiply(long a, long[] b, final int bValidLength, long[] c) {
         for (int j = 0; j < bValidLength; j++) {
             long cDigit = c[j] + a * b[j];
             c[j] = cDigit & MASK;
@@ -93,8 +89,8 @@ public class Factorial {
         }
     }
 
-    private static int calValidDigitLength(final long[] data, final int start) {
-        int tStart = Math.min(data.length - 1, start - 1);
+    private static int calValidDigitLength(final long[] data, final int startLength) {
+        int tStart = Math.min(data.length - 1, startLength - 1);
         for (int i = tStart; i >= 0; i--) {
             if (data[i] != 0) {
                 return i + 1;
@@ -104,7 +100,7 @@ public class Factorial {
     }
 
     /**
-     * 转换为十六进制的字符串, 比{@link chip.Factorial#toDecString(long[])} 效率高
+     * 转换为十六进制的字符串, 比{@link Factorial#toDecString(long[])} 效率高
      *
      * @param data 大数数组
      * @return 十六进制字符串
@@ -173,6 +169,7 @@ public class Factorial {
     private static final long SCALE = 1L << SHIFT;
     private static final long MASK = SCALE - 1L;
     private static final Map<Long, String> HEX_CHARS = new HashMap<>();
+
     static {
         HEX_CHARS.put(10L, "A");
         HEX_CHARS.put(11L, "B");
