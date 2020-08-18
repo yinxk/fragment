@@ -115,7 +115,7 @@ public class Factorial {
         for (int j = 0; j < bValidLength; j++) {
             long cDigit = c[j] + a * b[j];
             c[j] = cDigit & MASK;
-            c[j + 1] += cDigit >> SHIFT;
+            c[j + 1] = cDigit >> SHIFT;
         }
     }
 
