@@ -1,5 +1,6 @@
 package chip;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,15 +15,16 @@ public class FactorialTest {
     public static void main(String[] args) {
         int n = 7665;
 
-        // BigInteger result = BigInteger.ONE;
-        // long start = System.nanoTime();
-        // for (int i = 1; i <= n; i++) {
-        //     result = result.multiply(new BigInteger(String.valueOf(i)));
-        // }
-        // long end = System.nanoTime();
-        //
-        // System.out.println(result);
-        // System.out.printf("%40s %20s%n", "BigInteger 消耗时间", (end - start));
+        BigInteger result = BigInteger.ONE;
+        long start = System.nanoTime();
+        for (int i = 1; i <= n; i++) {
+            result = result.multiply(new BigInteger(String.valueOf(i)));
+        }
+
+        long end = System.nanoTime();
+
+        System.out.println(result);
+        System.out.printf("%40s %20s%n", "BigInteger 消耗时间", (end - start));
         //
         // MyInteger result2 = new MyInteger(1);
         // long start2 = System.nanoTime();
@@ -46,31 +48,31 @@ public class FactorialTest {
         // MyInteger b = new MyInteger(6);
         // System.out.println(a.multiply(b));
 
-        for (int i = 7665; i <= 7670; i++) {
-
-            MyInteger result4 = new MyInteger(1);
-            long start4 = System.nanoTime();
-            for (int j = 1; j <= i; j++) {
-                result4 = result4.multiply(new MyInteger(j));
-            }
-            long end4 = System.nanoTime();
-            long start44 = System.nanoTime();
-            String result44 = factorial(i);
-            long end44 = System.nanoTime();
-            System.out.printf("i = %s, time = %20s, MyInteger   %s %n", i, end4 - start4,
-                    result4.toString());
-            System.out.printf("i = %s, time = %20s, ShareArr    %s %n", i,
-                    end44 - start44, result44);
-            newIntArrayTime.set(0);
-            mulTime.set(0);
-            consTime.set(0);
-            MyInteger.newIntArrayTime.set(0);
-            MyInteger.mulTime.set(0);
-            MyInteger.consTime.set(0);
-            resetTime.set(0);
-            calValidLengthTime.set(0);
-
-        }
+        // for (int i = 7665; i <= 7670; i++) {
+        //
+        //     MyInteger result4 = new MyInteger(1);
+        //     long start4 = System.nanoTime();
+        //     for (int j = 1; j <= i; j++) {
+        //         result4 = result4.multiply(new MyInteger(j));
+        //     }
+        //     long end4 = System.nanoTime();
+        //     long start44 = System.nanoTime();
+        //     String result44 = factorial(i);
+        //     long end44 = System.nanoTime();
+        //     System.out.printf("i = %s, time = %20s, MyInteger   %s %n", i, end4 - start4,
+        //             result4.toString());
+        //     System.out.printf("i = %s, time = %20s, ShareArr    %s %n", i,
+        //             end44 - start44, result44);
+        //     newIntArrayTime.set(0);
+        //     mulTime.set(0);
+        //     consTime.set(0);
+        //     MyInteger.newIntArrayTime.set(0);
+        //     MyInteger.mulTime.set(0);
+        //     MyInteger.consTime.set(0);
+        //     resetTime.set(0);
+        //     calValidLengthTime.set(0);
+        //
+        // }
 
 
         // for (int i = 0; i <= 3000; i++) {

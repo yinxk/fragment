@@ -1,5 +1,6 @@
 package chip;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,21 +13,66 @@ import java.util.Map;
  */
 public class Factorial {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        System.out.println(factorial(7665));
+        long allTime = 0L;
+        int allCount = 0;
+        for (int n = 7500; n <= 8000; n++) {
+            allCount++;
+            BigInteger resultBit = BigInteger.ONE;
+            long start = System.nanoTime();
+            for (int i = 1; i <= n; i++) {
+                resultBit = resultBit.multiply(new BigInteger(String.valueOf(i)));
+            }
+            String result = resultBit.toString();
+            long end = System.nanoTime();
 
+            long start3 = System.nanoTime();
+            String result3 = factorial(n, Radix.DEC);
+            long end3 = System.nanoTime();
+            long thisTime = end3 - start3;
+            // System.out.printf("%s %20s, n = %s %n", "ShareArr  消耗时间", thisTime, n);
+            allTime += thisTime;
+            System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "BigInteger 消耗时间",
+                    (end - start),
+                    "ShareArr  消耗时间", (end3 - start3), n, (end3 - start3) / (end - start));
+            if (!result.equalsIgnoreCase(result3)) {
+                System.err.printf("不相等 %n");
+            }
+        }
+        if (allCount > 0) {
+            System.out.printf("消耗时间和: %s, 平均时间: %s %n", allTime, allTime / allCount);
+        }
+
+
+        // System.out.println(factorial(7665));
+
+    }
+
+    public enum Radix {
+        /**
+         * 10
+         */
+        DEC,
+        /**
+         * 16
+         */
+        HEX
     }
 
     /**
      * 阶乘
      *
-     * @param n 数字n
-     * @return 阶乘结果十进制字符串
-     * @throws IllegalArgumentException 当 n < 0时
+     * @param n     数字n
+     * @param radix 结果以十进制或者十六进制表示
+     * @return 阶乘结果十进制/十六进制字符串
+     * @throws IllegalArgumentException 当 n < 0时 or n > 16384
      */
-    public static String factorial(int n) {
+    public static String factorial(int n, Radix radix) {
         if (n < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (n > N_MAX) {
             throw new IllegalArgumentException();
         }
         if (n == 0) {
@@ -64,8 +110,7 @@ public class Factorial {
             c = temp;
         }
 
-        return toDecString(b);
-        // return toHexString(b);
+        return Radix.DEC == radix ? toDecString(b) : toHexString(b);
     }
 
 
@@ -158,8 +203,9 @@ public class Factorial {
     }
 
 
-    private static final int SHIFT = 31;
-
+    private static final int N_MAX_SHIFT = 14;
+    private static final int SHIFT = 63 - N_MAX_SHIFT;
+    private static final long N_MAX = 1L << N_MAX_SHIFT;
     private static final long SCALE = 1L << SHIFT;
 
     private static final long MASK = SCALE - 1L;
