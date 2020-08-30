@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Factorial {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         long allTime = 0L;
         int allCount = 0;
