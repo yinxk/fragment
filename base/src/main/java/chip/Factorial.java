@@ -77,50 +77,39 @@ public class Factorial {
         // 存储每一步的n值
         final int aValidLength = 1;
         long a;
-        // b c 交替存储计算结果
         int storeLength = aValidLength << 1;
         long[] b = new long[storeLength];
-        long[] c = new long[storeLength];
         long[] temp;
         // 将b初始化为1
         b[0] = 1;
         int bValidLength = 1;
-        int nextCLength;
+        int nextBLength;
         for (int i = 2; i <= n; i++) {
             a = i;
             bValidLength = calValidDigitLength(b, bValidLength + 1);
-            nextCLength = aValidLength + bValidLength;
+            nextBLength = aValidLength + bValidLength;
             // 保证至少多一位
-            if (nextCLength >= c.length) {
+            if (nextBLength >= b.length) {
                 temp = b;
-                storeLength = nextCLength << 1;
-                c = new long[storeLength];
+                storeLength = nextBLength << 1;
                 b = new long[storeLength];
                 System.arraycopy(temp, 0, b, 0, bValidLength);
             }
-            multiply(a, b, bValidLength, c);
-            reset(b, bValidLength);
-            temp = b;
-            b = c;
-            c = temp;
+            multiply(a, b, bValidLength);
         }
 
         return Radix.HEX == radix ? toHexString(b) : toDecString(b);
     }
 
 
-    private static void multiply(long a, long[] b, final int bValidLength, long[] c) {
+    private static void multiply(long a, long[] b, final int bValidLength) {
+        long carry = 0L;
         for (int j = 0; j < bValidLength; j++) {
-            long cDigit = c[j] + a * b[j];
-            c[j] = cDigit & MASK;
-            c[j + 1] = cDigit >> SHIFT;
+            long cDigit = carry + a * b[j];
+            b[j] = cDigit & MASK;
+            carry = cDigit >> SHIFT;
         }
-    }
-
-    private static void reset(final long[] data, int len) {
-        for (int i = 0; i < len; i++) {
-            data[i] = 0;
-        }
+        b[bValidLength] = carry;
     }
 
     private static int calValidDigitLength(final long[] data, final int startLength) {
