@@ -134,7 +134,7 @@ public class Factorial {
         byte[] hexDigits = new byte[SHIFT / 4];
         byte[] temp;
         int hexIndex = -1;
-        for (int i = validLength - 1; i >= 0; --i) {
+        for (int i = validLength - 1; i >= 0; i--) {
             digit = data[i];
             if (hexIndex >= hexDigits.length - 1) {
                 temp = hexDigits;
