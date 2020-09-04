@@ -2,9 +2,7 @@ package chip;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 编程实现7665的阶乘计算结果
@@ -143,28 +141,43 @@ public class Factorial {
      */
     private static String toHexString(long[] data) {
         int validLength = calValidDigitLength(data, data.length - 1);
-        List<Long> mods = new ArrayList<>();
-        long lastMod = 0;
-        while (validLength > 0) {
-            for (int i = validLength - 1; i >= 0; i--) {
-                long theDigit = (lastMod << SHIFT) + data[i];
-                // 这里和dec方式不一样, 为了不增加判断条件, 选择冗余
-                data[i] = theDigit >> 4;
-                lastMod = theDigit & 15;
+        long digit;
+        byte[] hexDigits = new byte[SHIFT / 4];
+        byte[] temp;
+        int hexIndex = -1;
+        for (int i = validLength - 1; i >= 0; --i) {
+            digit = data[i];
+            if (hexIndex >= hexDigits.length - 1) {
+                temp = hexDigits;
+                hexDigits = new byte[hexDigits.length << 1];
+                System.arraycopy(temp, 0, hexDigits, 0, temp.length);
             }
-            mods.add(lastMod);
-            validLength = calValidDigitLength(data, validLength);
-            lastMod = 0;
+            for (int j = SHIFT - 4; j >= 0; j -= 4) {
+                toHexDigit(hexDigits, digit, ++hexIndex, j);
+            }
         }
+        int start = 0;
+        int end = hexIndex + 1;
+        for (int i = 0; i < end; i++) {
+            if (hexDigits[i] != 0) {
+                start = i;
+                break;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = start; i < end; i++) {
+            byte hexDigit = hexDigits[i];
+            if (hexDigit < 10) {
+                sb.append(hexDigit);
+            } else {
+                sb.append((char) (hexDigit + 55));
+            }
+        }
+        return sb.toString();
+    }
 
-        StringBuilder strBuilder = new StringBuilder();
-        int size = mods.size();
-        for (int i = size - 1; i >= 0; i--) {
-            Long digitNumber = mods.get(i);
-            String digitChar = HEX_CHARS.get(digitNumber);
-            strBuilder.append(digitChar == null ? digitNumber : digitChar);
-        }
-        return strBuilder.toString();
+    private static void toHexDigit(byte[] hexDigits, long digit, int index, int shift) {
+        hexDigits[index] = (byte) ((int) (digit >>> shift) & 15);
     }
 
     /**
@@ -180,8 +193,6 @@ public class Factorial {
         while (validLength > 0) {
             for (int i = validLength - 1; i >= 0; i--) {
                 long theDigit = (lastMod << SHIFT) + data[i];
-                // 这里和hex(2^n)方式不一样, 为了不增加判断条件, 选择冗余
-                // 效率较低
                 data[i] = theDigit / 10;
                 lastMod = theDigit % 10;
             }
@@ -199,20 +210,11 @@ public class Factorial {
     }
 
 
-    private static final int N_MAX_SHIFT = 14;
+    private static final int N_MAX_SHIFT = 15;
+    // 必须为4的倍数
     private static final int SHIFT = 63 - N_MAX_SHIFT;
     private static final long N_MAX = 1L << N_MAX_SHIFT;
     private static final long SCALE = 1L << SHIFT;
     private static final long MASK = SCALE - 1L;
-    private static final Map<Long, String> HEX_CHARS = new HashMap<>();
-
-    static {
-        HEX_CHARS.put(10L, "A");
-        HEX_CHARS.put(11L, "B");
-        HEX_CHARS.put(12L, "C");
-        HEX_CHARS.put(13L, "D");
-        HEX_CHARS.put(14L, "E");
-        HEX_CHARS.put(15L, "F");
-    }
 
 }
