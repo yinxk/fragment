@@ -31,9 +31,9 @@ public class Factorial {
             long thisTime = end3 - start3;
             // System.out.printf("%s %20s, n = %s %n", "MyFactorial 消耗时间", thisTime, n);
             allTime += thisTime;
-            System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "MyFactorial 消耗时间",
+            System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "BigInteger 消耗时间",
                     (end - start),
-                    "BigInteger 消耗时间", (end3 - start3), n, (double) (end - start) / (end3 - start3));
+                    "MyFactorial 消耗时间", (end3 - start3), n, (double) (end - start) / (end3 - start3));
             // System.out.printf("值1: %s, 值2: %s \n", result, result3);
             if (!result.equalsIgnoreCase(result3)) {
                 System.err.printf("不相等 %n");
