@@ -28,7 +28,7 @@ public class Factorial {
         //     long end = System.nanoTime();
         //
         //     long start3 = System.nanoTime();
-        //     String result3 = result(n);
+        //     String result3 = factorial(n);
         //     long end3 = System.nanoTime();
         //     long thisTime = end3 - start3;
         //     // System.out.printf("%s %20s, n = %s %n", "MyFactorial 消耗时间", thisTime, n);
