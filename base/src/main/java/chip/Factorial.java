@@ -1,7 +1,5 @@
 package chip;
 
-import java.math.BigInteger;
-
 /**
  * 编程实现7665的阶乘计算结果
  * 不能用{@link java.math.BigInteger} {@link java.math.BigDecimal}以及第三方的工具类
@@ -12,36 +10,40 @@ import java.math.BigInteger;
 public class Factorial {
 
     public static void main(String[] args) {
+        long start = System.nanoTime();
+        String result = factorial(7665);
+        long end = System.nanoTime();
+        System.out.printf("消耗时间: %s ns, %n结果为: %s %n", (end - start), result);
 
-        long allTime = 0L;
-        int allCount = 0;
-        for (int n = 7500; n <= 10000; n++) {
-            allCount++;
-            BigInteger resultBit = BigInteger.ONE;
-            long start = System.nanoTime();
-            for (int i = 1; i <= n; i++) {
-                resultBit = resultBit.multiply(new BigInteger(String.valueOf(i)));
-            }
-            String result = resultBit.toString(16);
-            long end = System.nanoTime();
-
-            long start3 = System.nanoTime();
-            String result3 = factorial(n);
-            long end3 = System.nanoTime();
-            long thisTime = end3 - start3;
-            // System.out.printf("%s %20s, n = %s %n", "MyFactorial 消耗时间", thisTime, n);
-            allTime += thisTime;
-            System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "BigInteger 消耗时间",
-                    (end - start),
-                    "MyFactorial 消耗时间", (end3 - start3), n, (double) (end - start) / (end3 - start3));
-            // System.out.printf("值1: %s, 值2: %s \n", result, result3);
-            if (!result.equalsIgnoreCase(result3)) {
-                System.err.printf("不相等 %n");
-            }
-        }
-        if (allCount > 0) {
-            System.out.printf("消耗时间和: %s, 平均时间: %s %n", allTime, allTime / allCount);
-        }
+        // long allTime = 0L;
+        // int allCount = 0;
+        // for (int n = 7500; n <= 10000; n++) {
+        //     allCount++;
+        //     BigInteger resultBit = BigInteger.ONE;
+        //     long start = System.nanoTime();
+        //     for (int i = 1; i <= n; i++) {
+        //         resultBit = resultBit.multiply(new BigInteger(String.valueOf(i)));
+        //     }
+        //     String result = resultBit.toString(16);
+        //     long end = System.nanoTime();
+        //
+        //     long start3 = System.nanoTime();
+        //     String result3 = result(n);
+        //     long end3 = System.nanoTime();
+        //     long thisTime = end3 - start3;
+        //     // System.out.printf("%s %20s, n = %s %n", "MyFactorial 消耗时间", thisTime, n);
+        //     allTime += thisTime;
+        //     System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "BigInteger 消耗时间",
+        //             (end - start),
+        //             "MyFactorial 消耗时间", (end3 - start3), n, (double) (end - start) / (end3 - start3));
+        //     // System.out.printf("值1: %s, 值2: %s \n", result, result3);
+        //     if (!result.equalsIgnoreCase(result3)) {
+        //         System.err.printf("不相等 %n");
+        //     }
+        // }
+        // if (allCount > 0) {
+        //     System.out.printf("消耗时间和: %s, 平均时间: %s %n", allTime, allTime / allCount);
+        // }
 
     }
 
