@@ -1,15 +1,13 @@
 package chip;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 编程实现7665的阶乘计算结果
  * 不能用{@link java.math.BigInteger} {@link java.math.BigDecimal}以及第三方的工具类
  * 运行结果要绝对正确
- *
- * 该题没有明确指出返回的表示格式, 那么其实上16进制的结果也是合理的
+ * <p>
+ * 该题没有明确指出返回的表示格式, 那么其实上16进制的结果也是合理的, 直接使用16进制做为结果来解答
  */
 public class Factorial {
 
@@ -28,7 +26,7 @@ public class Factorial {
             long end = System.nanoTime();
 
             long start3 = System.nanoTime();
-            String result3 = factorial(n, Radix.HEX);
+            String result3 = factorial(n);
             long end3 = System.nanoTime();
             long thisTime = end3 - start3;
             // System.out.printf("%s %20s, n = %s %n", "ShareArr  消耗时间", thisTime, n);
@@ -45,31 +43,17 @@ public class Factorial {
             System.out.printf("消耗时间和: %s, 平均时间: %s %n", allTime, allTime / allCount);
         }
 
-
-        // System.out.println(factorial(7665));
-
     }
 
-    public enum Radix {
-        /**
-         * 10
-         */
-        DEC,
-        /**
-         * 16
-         */
-        HEX
-    }
 
     /**
      * 阶乘
      *
-     * @param n     数字n
-     * @param radix 结果以十进制或者十六进制表示
-     * @return 阶乘结果十进制/十六进制字符串
+     * @param n 数字n
+     * @return 阶乘结果十六进制字符串
      * @throws IllegalArgumentException 当 n < 0时 or n > {@link Factorial#N_MAX}
      */
-    public static String factorial(int n, Radix radix) {
+    public static String factorial(int n) {
         if (n < 0 || n > N_MAX) {
             throw new IllegalArgumentException();
         }
@@ -101,7 +85,7 @@ public class Factorial {
             multiply(a, b, bValidLength);
         }
 
-        return Radix.HEX == radix ? toHexString(b) : toDecString(b);
+        return toHexString(b);
     }
 
 
@@ -126,7 +110,7 @@ public class Factorial {
     }
 
     /**
-     * 转换为十六进制的字符串, 比{@link Factorial#toDecString(long[])} 效率高
+     * 转换为十六进制的字符串
      *
      * @param data 大数数组
      * @return 十六进制字符串
@@ -155,36 +139,6 @@ public class Factorial {
             sb.append((char) (digitByte + 55));
         }
     }
-
-    /**
-     * 转换为十进制字符串, 效率较低
-     *
-     * @param data 大数数组
-     * @return 十进制字符串
-     */
-    private static String toDecString(long[] data) {
-        int validLength = calValidDigitLength(data, data.length - 1);
-        List<Long> mods = new ArrayList<>();
-        long lastMod = 0;
-        while (validLength > 0) {
-            for (int i = validLength - 1; i >= 0; i--) {
-                long theDigit = (lastMod << SHIFT) + data[i];
-                data[i] = theDigit / 10;
-                lastMod = theDigit % 10;
-            }
-            mods.add(lastMod);
-            validLength = calValidDigitLength(data, validLength);
-            lastMod = 0;
-        }
-
-        StringBuilder strBuilder = new StringBuilder();
-        int size = mods.size();
-        for (int i = size - 1; i >= 0; i--) {
-            strBuilder.append(mods.get(i));
-        }
-        return strBuilder.toString();
-    }
-
 
     private static final int N_MAX_SHIFT = 15;
     // 需要为4的倍数, 16进制方便转换
