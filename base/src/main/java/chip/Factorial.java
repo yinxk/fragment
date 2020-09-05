@@ -15,7 +15,7 @@ public class Factorial {
 
         long allTime = 0L;
         int allCount = 0;
-        for (int n = 7500; n <= 8000; n++) {
+        for (int n = 7500; n <= 30000; n++) {
             allCount++;
             BigInteger resultBit = BigInteger.ONE;
             long start = System.nanoTime();
@@ -29,11 +29,11 @@ public class Factorial {
             String result3 = factorial(n);
             long end3 = System.nanoTime();
             long thisTime = end3 - start3;
-            // System.out.printf("%s %20s, n = %s %n", "ShareArr  消耗时间", thisTime, n);
+            // System.out.printf("%s %20s, n = %s %n", "MyFactorial 消耗时间", thisTime, n);
             allTime += thisTime;
-            System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "BigInteger 消耗时间",
+            System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "MyFactorial 消耗时间",
                     (end - start),
-                    "ShareArr  消耗时间", (end3 - start3), n, (end3 - start3) / (end - start));
+                    "BigInteger 消耗时间", (end3 - start3), n, (double) (end - start) / (end3 - start3));
             // System.out.printf("值1: %s, 值2: %s \n", result, result3);
             if (!result.equalsIgnoreCase(result3)) {
                 System.err.printf("不相等 %n");
