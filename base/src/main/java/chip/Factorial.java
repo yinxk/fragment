@@ -22,11 +22,11 @@ public class Factorial {
             for (int i = 1; i <= n; i++) {
                 resultBit = resultBit.multiply(new BigInteger(String.valueOf(i)));
             }
-            String result = resultBit.toString();
+            String result = resultBit.toString(16);
             long end = System.nanoTime();
 
             long start3 = System.nanoTime();
-            String result3 = factorial(n, Radix.DEC);
+            String result3 = factorial(n, Radix.HEX);
             long end3 = System.nanoTime();
             long thisTime = end3 - start3;
             // System.out.printf("%s %20s, n = %s %n", "ShareArr  消耗时间", thisTime, n);
@@ -34,6 +34,7 @@ public class Factorial {
             System.out.printf("%s %20s, %s %20s, n = %s, 倍数关系: %s %n", "BigInteger 消耗时间",
                     (end - start),
                     "ShareArr  消耗时间", (end3 - start3), n, (end3 - start3) / (end - start));
+            // System.out.printf("值1: %s, 值2: %s \n", result, result3);
             if (!result.equalsIgnoreCase(result3)) {
                 System.err.printf("不相等 %n");
             }
