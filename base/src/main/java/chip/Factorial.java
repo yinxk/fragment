@@ -119,12 +119,10 @@ public class Factorial {
      */
     private static String toHexString(long[] data) {
         int validLength = calValidDigitLength(data, data.length - 1);
-        long digit;
         StringBuilder sb = new StringBuilder();
         for (int i = validLength - 1; i >= 0; i--) {
-            digit = data[i];
             for (int j = SHIFT - 4; j >= 0; j -= 4) {
-                appendHexDigit(sb, digit, j);
+                appendHexDigit(sb, data[i], j);
             }
         }
         while (sb.charAt(0) == '0') {
