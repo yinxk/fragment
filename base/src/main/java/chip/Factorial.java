@@ -131,42 +131,26 @@ public class Factorial {
     private static String toHexString(long[] data) {
         int validLength = calValidDigitLength(data, data.length - 1);
         long digit;
-        byte[] hexDigits = new byte[SHIFT / 4];
-        byte[] temp;
-        int hexIndex = -1;
+        StringBuilder sb = new StringBuilder();
         for (int i = validLength - 1; i >= 0; i--) {
             digit = data[i];
-            if (hexIndex >= hexDigits.length - 1) {
-                temp = hexDigits;
-                hexDigits = new byte[hexDigits.length << 1];
-                System.arraycopy(temp, 0, hexDigits, 0, temp.length);
-            }
             for (int j = SHIFT - 4; j >= 0; j -= 4) {
-                toHexDigit(hexDigits, digit, ++hexIndex, j);
+                appendHexDigit(sb, digit, j);
             }
         }
-        int start = 0;
-        int end = hexIndex + 1;
-        for (int i = 0; i < end; i++) {
-            if (hexDigits[i] != 0) {
-                start = i;
-                break;
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = start; i < end; i++) {
-            byte hexDigit = hexDigits[i];
-            if (hexDigit < 10) {
-                sb.append(hexDigit);
-            } else {
-                sb.append((char) (hexDigit + 55));
-            }
+        while (sb.charAt(0) == '0') {
+            sb.deleteCharAt(0);
         }
         return sb.toString();
     }
 
-    private static void toHexDigit(byte[] hexDigits, long digit, int index, int shift) {
-        hexDigits[index] = (byte) ((int) (digit >>> shift) & 15);
+    private static void appendHexDigit(StringBuilder sb, long digit, int shift) {
+        byte digitByte = (byte) ((int) (digit >>> shift) & 15);
+        if (digitByte < 10) {
+            sb.append(digitByte);
+        } else {
+            sb.append((char) (digitByte + 55));
+        }
     }
 
     /**
@@ -200,7 +184,7 @@ public class Factorial {
 
 
     private static final int N_MAX_SHIFT = 15;
-    // 必须为4的倍数
+    // 需要为4的倍数, 16进制方便转换
     private static final int SHIFT = 63 - N_MAX_SHIFT;
     private static final long N_MAX = 1L << N_MAX_SHIFT;
     private static final long SCALE = 1L << SHIFT;
