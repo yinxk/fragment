@@ -15,7 +15,7 @@ public class Factorial {
 
         long allTime = 0L;
         int allCount = 0;
-        for (int n = 7500; n <= 30000; n++) {
+        for (int n = 7500; n <= 10000; n++) {
             allCount++;
             BigInteger resultBit = BigInteger.ONE;
             long start = System.nanoTime();
