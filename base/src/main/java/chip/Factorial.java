@@ -8,6 +8,8 @@ import java.util.List;
  * 编程实现7665的阶乘计算结果
  * 不能用{@link java.math.BigInteger} {@link java.math.BigDecimal}以及第三方的工具类
  * 运行结果要绝对正确
+ *
+ * 该题没有明确指出返回的表示格式, 那么其实上16进制的结果也是合理的
  */
 public class Factorial {
 
