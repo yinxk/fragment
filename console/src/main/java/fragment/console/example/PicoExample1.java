@@ -1,7 +1,9 @@
 package fragment.console.example;
 
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -27,6 +29,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.ParentCommand;
 import picocli.shell.jline3.PicocliCommands;
 import picocli.shell.jline3.PicocliCommands.PicocliCommandsFactory;
 
@@ -37,15 +40,62 @@ import picocli.shell.jline3.PicocliCommands.PicocliCommandsFactory;
  * The built-in {@code PicocliCommands.ClearScreen} command was introduced in picocli 4.6.
  * </p>
  */
-public class PicoExampleTest {
+public class PicoExample1 {
+
+
+    @Command(name = "test1", mixinStandardHelpOptions = true, version = "1.0",
+            description = {"测试测试1"},
+            subcommands = {Nested.class, CommandLine.HelpCommand.class})
+    static class Test1 implements Runnable, Callable<Integer> {
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + this.getClass() + "runnable");
+        }
+
+        @Override
+        public Integer call() throws Exception {
+            System.out.println(Thread.currentThread().getName() + this.getClass() + "callable");
+            return 0;
+        }
+    }
+
+    @Command(name = "test2", mixinStandardHelpOptions = true, version = "1.0",
+            description = {"测试测试22"},
+            subcommands = {})
+    static class Test2 implements Runnable, Callable<Integer> {
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + this.getClass() + " runnable");
+        }
+
+        @Override
+        public Integer call() throws Exception {
+            System.out.println(Thread.currentThread().getName() + this.getClass() + " callable");
+            return 0;
+        }
+    }
+
+    @Command(name = "test3")
+    static class Test3 extends Test2 {
+
+    }
+
 
     /**
      * Top-level command that just prints help.
      */
-    @Command(name = "",
-            footer = {"", "Press Ctrl-D to exit."})
-    static class CliCommands {
-        CliCommands() {}
+    @Command(name = "", subcommands = {PicocliCommands.ClearScreen.class})
+    static class CliCommands implements Runnable {
+        PrintWriter out = new PrintWriter(System.out);
+
+        CliCommands() {
+        }
+
+        public void run() {
+            out.println(new CommandLine(this).getUsageMessage());
+        }
     }
 
     /**
@@ -54,11 +104,10 @@ public class PicoExampleTest {
     @Command(name = "cmd", mixinStandardHelpOptions = true, version = "1.0",
             description = {"Command with some options to demonstrate TAB-completion.",
                     " (Note that enum values also get completed.)"},
-            footer = {"", "Press Ctrl-D to exit."},
             subcommands = {Nested.class, CommandLine.HelpCommand.class})
-    static class MyCommand extends CliCommands implements Runnable {
+    static class MyCommand implements Runnable {
         @Option(names = {"-v", "--verbose"},
-                description = { "Specify multiple -v options to increase verbosity.",
+                description = {"Specify multiple -v options to increase verbosity.",
                         "For example, `-v -v -v` or `-vvv`"})
         private boolean[] verbosity = {};
 
@@ -77,12 +126,15 @@ public class PicoExampleTest {
             private TimeUnit unit;
         }
 
+        @ParentCommand
+        CliCommands parent;
+
         public void run() {
             if (verbosity.length > 0) {
-                System.out.printf("Hi there. You asked for %d %s.%n",
+                parent.out.printf("Hi there. You asked for %d %s.%n",
                         myDuration.amount, myDuration.unit);
             } else {
-                System.out.println("hi!");
+                parent.out.println("hi!");
             }
         }
     }
@@ -117,7 +169,6 @@ public class PicoExampleTest {
     }
 
     public static void main(String[] args) {
-        AnsiConsole.systemInstall();
         try {
             Supplier<Path> workDir = () -> Paths.get(System.getProperty("user.dir"));
             // set up JLine built-in commands
@@ -131,14 +182,15 @@ public class PicoExampleTest {
             // MyCustomFactory customFactory = createCustomFactory(); // your application custom factory
             // PicocliCommandsFactory factory = new PicocliCommandsFactory(customFactory); // chain the factories
 
-            CommandLine cmd = new CommandLine(commands, factory);
+            CommandLine cmd = new CommandLine(commands, factory).addSubcommand(new MyCommand())
+                    .addSubcommand(new Nested()).addSubcommand(new Test1())
+                    .addSubcommand(new Test2()).addSubcommand(new Test3());
             PicocliCommands picocliCommands = new PicocliCommands(cmd);
-
             Parser parser = new DefaultParser();
+            AnsiConsole.systemInstall();
             try (Terminal terminal = TerminalBuilder.builder().build()) {
                 SystemRegistry systemRegistry = new SystemRegistryImpl(parser, terminal, workDir, null);
                 systemRegistry.setCommandRegistries(builtins, picocliCommands);
-                systemRegistry.register("help", picocliCommands);
 
                 LineReader reader = LineReaderBuilder.builder()
                         .terminal(terminal)
@@ -155,8 +207,6 @@ public class PicoExampleTest {
 
                 String prompt = "prompt> ";
                 String rightPrompt = null;
-
-                // start the shell and process input until the user quits with Ctrl-D
                 String line;
                 while (true) {
                     try {
