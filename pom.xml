@@ -29,6 +29,7 @@
         <module>code-generator</module>
         <module>file-str-file</module>
         <module>console</module>
+        <module>practice</module>
     </modules>
 
     <dependencies>
