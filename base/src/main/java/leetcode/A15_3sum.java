@@ -3,9 +3,7 @@ package leetcode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * https://leetcode-cn.com/problems/3sum/
@@ -16,10 +14,11 @@ public class A15_3sum {
 
         A15_3sum a15_3sum = new A15_3sum();
         System.out.println(a15_3sum.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
+        System.out.println(a15_3sum.threeSum(new int[]{-4, -2, 1, -5, -4, -4, 4, -2, 0, 4, 0, -2, 3, 1, -5, 0}));
     }
 
     /**
-     * 最容易想到的办法
+     * 最容易想到的办法, 穷举法
      */
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
@@ -27,7 +26,7 @@ public class A15_3sum {
         if (len < 3) {
             return res;
         }
-        Set<Tuple> tupleSet = new HashSet<>();
+        Set tupleSet = new Set();
         for (int i = 0; i < len; i++) {
             for (int j = i + 1; j < len; j++) {
                 for (int k = j + 1; k < len; k++) {
@@ -44,34 +43,60 @@ public class A15_3sum {
         return res;
     }
 
+    public static class Set {
+
+        List<Tuple> values = new ArrayList<>();
+
+        public void add(Tuple val) {
+            values.add(val);
+        }
+
+        public boolean contains(Tuple val) {
+            for (Tuple value : values) {
+                if (value.equals(val)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
     public static class Tuple {
 
-        public Integer a;
-        public Integer b;
-        public Integer c;
+        int[] values;
 
-        public Tuple(Integer a, Integer b, Integer c) {
-            this.a = a;
-            this.b = b;
-            this.c = c;
+        public Tuple(int a, int b, int c) {
+            this.values = new int[3];
+            this.values[0] = a;
+            this.values[1] = b;
+            this.values[2] = c;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (o == this)
-                return true;
-            if (!(o instanceof Tuple))
+        public boolean equals(Tuple o) {
+            if (o == null) {
                 return false;
-            Tuple other = (Tuple) o;
-            return (a.equals(other.a) || a.equals(other.b) || a.equals(other.c)) &&
-                    (b.equals(other.a) || b.equals(other.b) || b.equals(other.c)) &&
-                    (c.equals(other.a) || c.equals(other.b) || c.equals(other.c));
+            }
+            int len = values.length;
+            int[] comp = new int[len];
+            boolean[] comped = new boolean[len];
+            System.arraycopy(values, 0, comp, 0, len);
+            for (int i = 0; i < len; i++) {
+                int it = o.values[i];
+                for (int j = 0; j < len; j++) {
+                    if (!comped[j] && it == comp[j]) {
+                        comped[j] = true;
+                    }
+                }
+            }
+            for (boolean b : comped) {
+                if (!b) {
+                    return false;
+                }
+            }
+            return true;
         }
 
-        @Override
-        public int hashCode() {
-            return a.hashCode() + b.hashCode() + c.hashCode();
-        }
     }
 
 }
