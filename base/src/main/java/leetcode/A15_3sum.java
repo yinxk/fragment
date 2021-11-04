@@ -13,8 +13,9 @@ public class A15_3sum {
     public static void main(String[] args) throws IOException {
 
         A15_3sum a15_3sum = new A15_3sum();
-        System.out.println(a15_3sum.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
-        System.out.println(a15_3sum.threeSum(new int[]{-4, -2, 1, -5, -4, -4, 4, -2, 0, 4, 0, -2, 3, 1, -5, 0}));
+//        System.out.println(a15_3sum.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
+//        System.out.println(a15_3sum.threeSum(new int[]{-4, -2, 1, -5, -4, -4, 4, -2, 0, 4, 0, -2, 3, 1, -5, 0}));
+        System.out.println(a15_3sum.threeSum(new int[]{0,3,0,1,1,-1,-5,-5,3,-3,-3,0}));
     }
 
     /**
@@ -78,14 +79,13 @@ public class A15_3sum {
                 return false;
             }
             int len = values.length;
-            int[] comp = new int[len];
             boolean[] comped = new boolean[len];
-            System.arraycopy(values, 0, comp, 0, len);
             for (int i = 0; i < len; i++) {
                 int it = o.values[i];
                 for (int j = 0; j < len; j++) {
-                    if (!comped[j] && it == comp[j]) {
+                    if (!comped[j] && it == this.values[j]) {
                         comped[j] = true;
+                        break;
                     }
                 }
             }
