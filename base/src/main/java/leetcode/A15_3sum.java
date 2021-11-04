@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -59,12 +58,19 @@ public class A15_3sum {
 
         @Override
         public boolean equals(Object o) {
-            return hashCode() == o.hashCode();
+            if (o == this)
+                return true;
+            if (!(o instanceof Tuple))
+                return false;
+            Tuple other = (Tuple) o;
+            return (a.equals(other.a) || a.equals(other.b) || a.equals(other.c)) &&
+                    (b.equals(other.a) || b.equals(other.b) || b.equals(other.c)) &&
+                    (c.equals(other.a) || c.equals(other.b) || c.equals(other.c));
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(a, b, c);
+            return a.hashCode() + b.hashCode() + c.hashCode();
         }
     }
 
