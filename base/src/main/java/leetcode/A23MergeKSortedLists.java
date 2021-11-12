@@ -26,7 +26,7 @@ public class A23MergeKSortedLists {
 
     public ListNode mergeKLists(ListNode[] lists) {
         if (lists == null || lists.length == 0) return null;
-        return mergeListNode1(lists, 0, lists.length - 1);
+        return merge(lists, 0, lists.length - 1);
     }
 
     public ListNode merge(ListNode[] lists, int left, int right) {
