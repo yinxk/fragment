@@ -17,6 +17,8 @@ public class A24SwapNodesInPairs {
 
         A24SwapNodesInPairs a24SwapNodesInPairs = new A24SwapNodesInPairs();
         System.out.println(a24SwapNodesInPairs.swapPairs(ListNode.as(1, 2, 3, 4)));
+        System.out.println(a24SwapNodesInPairs.swapPairs(null));
+        System.out.println(a24SwapNodesInPairs.swapPairs(ListNode.as(1)));
     }
 
     public ListNode swapPairs(ListNode head) {
