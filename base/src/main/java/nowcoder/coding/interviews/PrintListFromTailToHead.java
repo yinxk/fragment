@@ -3,6 +3,8 @@ package nowcoder.coding.interviews;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import leetcode.ListNode;
+
 /**
  * 输入一个链表，按链表从尾到头的顺序返回一个ArrayList。
  */
@@ -41,15 +43,4 @@ public class PrintListFromTailToHead {
         result.addAll(Arrays.asList(res));
         return result;
     }
-    
-    public static class ListNode {
-        int val;
-        ListNode next = null;
-        
-        ListNode(int val) {
-            this.val = val;
-        }
-    }
-    
-    
 }

@@ -25,9 +25,9 @@ public class A19_RemoveNthNodeFromEndOfList {
 
     public static void main(String[] args) {
         A19_RemoveNthNodeFromEndOfList a19_removeNthNodeFromEndOfList = new A19_RemoveNthNodeFromEndOfList();
-        System.out.println(a19_removeNthNodeFromEndOfList.removeNthFromEnd(ListNodes.asListNode(1, 2, 3, 4, 5), 2));
-        System.out.println(a19_removeNthNodeFromEndOfList.removeNthFromEnd(ListNodes.asListNode(1), 1));
-        System.out.println(a19_removeNthNodeFromEndOfList.removeNthFromEnd(ListNodes.asListNode(1, 2), 1));
+        System.out.println(a19_removeNthNodeFromEndOfList.removeNthFromEnd(ListNode.as(1, 2, 3, 4, 5), 2));
+        System.out.println(a19_removeNthNodeFromEndOfList.removeNthFromEnd(ListNode.as(1), 1));
+        System.out.println(a19_removeNthNodeFromEndOfList.removeNthFromEnd(ListNode.as(1, 2), 1));
     }
 
 
@@ -125,56 +125,5 @@ public class A19_RemoveNthNodeFromEndOfList {
             pre.next = temp.next;
         }
         return head;
-    }
-
-
-    public static class ListNodes {
-
-        public static ListNode asListNode(int... val) {
-            ListNode pre = null;
-            ListNode head = null;
-            for (int i = val.length - 1; i >= 0; i--) {
-                head = new ListNode(val[i], pre);
-                pre = head;
-            }
-            return head;
-        }
-
-    }
-
-    public static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder strBuilder = new StringBuilder();
-            strBuilder.append("[");
-            ListNode temp = this;
-            boolean first = true;
-            while (temp != null) {
-                if (first) {
-                    first = false;
-                } else {
-                    strBuilder.append(",");
-                }
-                strBuilder.append(temp.val);
-                temp = temp.next;
-            }
-            strBuilder.append("]");
-            return strBuilder.toString();
-        }
     }
 }
