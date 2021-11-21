@@ -27,6 +27,10 @@ public class TransferMain {
             System.out.println(order.getId());
             TransferResult transfer = transferService.transfer(order.getId());
             System.out.println(transfer.isSuccess());
+            transfer = transferService.transfer(order.getId());
+            System.out.println(transfer.isSuccess());
+            transfer = transferService.transfer(order.getId());
+            System.out.println(transfer.isSuccess());
         }
         System.out.println(accountService.listAccounts());
         System.out.println(accountService.listAccountBalanceOpLog());
