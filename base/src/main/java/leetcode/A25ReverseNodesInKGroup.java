@@ -28,11 +28,56 @@ public class A25ReverseNodesInKGroup {
         System.out.println(a25ReverseNodesInKGroup.reverseKGroup(ListNode.as(1, 2, 3, 4, 5), 3));
     }
 
+
+    /**
+     * https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/tu-jie-kge-yi-zu-fan-zhuan-lian-biao-by-user7208t/
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(0, head);
+
+        ListNode pre = dummy;
+        ListNode next = null;
+        ListNode start = null;
+        ListNode end = pre;
+
+        while (true) {
+            for (int i = 0; i < k && end != null; i++) {
+                end = end.next;
+            }
+            if (end == null) {
+                break;
+            }
+            start = pre.next;
+            next = end.next;
+            end.next = null;
+            reverse(start);
+            pre.next = end;
+            start.next = next;
+
+            pre = start;
+            end = pre;
+        }
+        return dummy.next;
+    }
+
+
+    private void reverse(ListNode head) {
+        ListNode pre = null;
+        ListNode curr = head;
+        ListNode next = null;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = next;
+        }
+    }
+
     /**
      * 这里写的reverse不是很好, 使用了额外的空间
      * 并且, 将节点先都打散了一遍
      */
-    public ListNode reverseKGroup(ListNode head, int k) {
+    public ListNode reverseKGroup1(ListNode head, int k) {
         ListNode dummy = new ListNode(0, head);
         ListNode first = dummy;
         ListNode second = dummy;
@@ -44,7 +89,7 @@ public class A25ReverseNodesInKGroup {
                     first.next = null;
                     ListNode nextHead = second.next;
                     second.next = null;
-                    ListNode[] headTail = reverse(subHead, second);
+                    ListNode[] headTail = reverse1(subHead, second);
                     first.next = headTail[0];
                     headTail[1].next = nextHead;
                     first = headTail[1];
@@ -58,7 +103,7 @@ public class A25ReverseNodesInKGroup {
         return dummy.next;
     }
 
-    private ListNode[] reverse(ListNode first, ListNode second) {
+    private ListNode[] reverse1(ListNode first, ListNode second) {
         Stack<ListNode> stack = new Stack<>();
         ListNode cur = first;
         ListNode pre = null;
