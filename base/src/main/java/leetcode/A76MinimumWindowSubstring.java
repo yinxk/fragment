@@ -20,10 +20,10 @@ public class A76MinimumWindowSubstring {
      * 2. right从0遍历s到结束
      * 3. 用cnt记录窗口中包含的子串包含T中字符的数量
      * 4. 当窗口中包含T中所有字符并且数量足够时
-     * 5. 移动l, 尝试子串长度
-     * 记录最小size以及最小left
-     * 当l指向的字符是T中包含的字符时, 更新cnt, 每个字符数量
-     * 6.回到第2步, right继续遍历
+     * 5. 移动left, 尝试缩短子串长度
+     *      记录最小size以及最小left
+     *      当left指向的字符是T中包含的字符时, 更新cnt, 每个字符数量
+     * 6.返回到第2步, right继续遍历
      */
     public String minWindow(String s, String t) {
         if (s == null || s.length() == 0 || t == null || t.length() == 0) {
