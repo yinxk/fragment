@@ -27,8 +27,7 @@ public class ThreadLocalTest {
         Thread.sleep(20000);
         for (int i = 0; i < 600; i++) {
             executorService.execute(() -> {
-                count.incrementAndGet();
-                System.out.println(count.get() + " " + Thread.currentThread().getName() + " set MyData");
+                System.out.println(count.incrementAndGet() + " " + Thread.currentThread().getName() + " set MyData");
                 threadLocal.set(new MyData());
                 // threadLocal.remove();
             });
