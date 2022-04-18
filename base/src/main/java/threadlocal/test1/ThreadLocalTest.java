@@ -1,50 +1,58 @@
 package threadlocal.test1;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.lang.reflect.Array;
+import java.util.Optional;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import cn.hutool.core.util.RandomUtil;
 
 public class ThreadLocalTest {
 
     static class MyData {
-        private Byte[] data = new Byte[1024 * 1024 * 50];
+        private final Byte[] data = new Byte[1024 * 1024 * 20];
     }
+
+    static int threadNum = 5;
 
     static ThreadLocal<MyData> threadLocal = new ThreadLocal<>();
 
-    static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(6);
-    static Map<String, Integer> countMap = new HashMap<>();
-
-    static String KEY = "countKey";
+    static ExecutorService executorService = new ThreadPoolExecutor(threadNum, threadNum, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+    static AtomicLong count = new AtomicLong();
 
     public static void main(String[] args) throws InterruptedException {
-
-
         Thread.sleep(20000);
-
-        for (int i = 0; i < 20 ; i++) {
-
+        for (int i = 0; i < 600; i++) {
             executorService.execute(() -> {
-                // 简单记下数, 间隔时间长, 多线程问题不考虑
-                Integer count = countMap.getOrDefault(KEY, 0);
-                count = count + 1;
-                countMap.put(KEY, count);
-                System.out.println(count + " " + Thread.currentThread().getName() + " set MyData");
+                count.incrementAndGet();
+                System.out.println(count.get() + " " + Thread.currentThread().getName() + " set MyData");
                 threadLocal.set(new MyData());
                 // threadLocal.remove();
             });
-            Thread.sleep(2000);
-            if (i % 3 == 0) {
-                threadLocal = new ThreadLocal<>();
-                System.out.println("new ThreadLocal");
+            TimeUnit.MILLISECONDS.sleep(200);
+            if (i % (RandomUtil.randomInt(threadNum) + 1) == 0) {
                 System.gc();
-                System.out.println("请求执行垃圾收集");
             }
-
         }
-        Thread.sleep(10000);
 
+        System.out.println("==================================");
+
+        for (int i = 0; i < 20; i++) {
+            executorService.execute(() -> {
+                MyData myData = threadLocal.get();
+                if (myData == null) {
+                    System.out.println(Thread.currentThread().getName() + " get myData is null");
+                } else {
+                    System.out.println(Thread.currentThread().getName() + " get myData length is: " + Optional.ofNullable(myData.data).map(Array::getLength).orElse(-1));
+                }
+                // threadLocal.remove();
+            });
+        }
+
+        TimeUnit.MINUTES.sleep(5);
         executorService.shutdown();
         System.out.println("结束");
     }
