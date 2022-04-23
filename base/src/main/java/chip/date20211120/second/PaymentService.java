@@ -51,26 +51,38 @@ public class PaymentService {
         }
 
         List<String> canUsedPaymentTypeList = new ArrayList<>();
-        try {
-            EXECUTOR_SERVICE.awaitTermination(TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            LOGGER.warn("被打断 [{}]", e.getMessage());
-        }
-        for (int i = 0; i < size; i++) {
-            Future<ConsultResult> task = taskList.get(i);
-            Boolean res = null;
-            String paymentType = paymentTypeList.get(i);
-            if (task.isDone()) {
-                try {
-                    res = Optional.ofNullable(task.get()).map(ConsultResult::isEnable).orElse(null);
-                } catch (ExecutionException | InterruptedException e) {
-                    LOGGER.warn("支付方式 [{}] 咨询失败 [{}]", paymentType, e.getMessage());
+        boolean[] hasRes = new boolean[size];
+        long start = System.currentTimeMillis();
+        boolean isAllHasRes;
+        while (true) {
+            isAllHasRes = false;
+            for (int i = 0; i < size; i++) {
+                Future<ConsultResult> task = taskList.get(i);
+                Boolean res = null;
+                String paymentType = paymentTypeList.get(i);
+                if (task.isDone() && !hasRes[i]) {
+                    try {
+                        res = Optional.ofNullable(task.get()).map(ConsultResult::isEnable).orElse(null);
+                        hasRes[i] = true;
+                    } catch (ExecutionException | InterruptedException e) {
+                        LOGGER.warn("支付方式 [{}] 咨询失败 [{}]", paymentType, e.getMessage());
+                    }
+                } else {
+                    if (System.currentTimeMillis() - start > TIME_OUT_MILLISECONDS) {
+                        task.cancel(true);
+                        hasRes[i] = true;
+                    }
                 }
-            } else {
-                task.cancel(true);
+                if (res != null && res) {
+                    canUsedPaymentTypeList.add(paymentType);
+                }
+                if (i == 0) {
+                    isAllHasRes = hasRes[i];
+                }
+                isAllHasRes = isAllHasRes && hasRes[i];
             }
-            if (res != null && res) {
-                canUsedPaymentTypeList.add(paymentType);
+            if (isAllHasRes) {
+                break;
             }
         }
 

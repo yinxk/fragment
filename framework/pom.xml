@@ -12,6 +12,8 @@
         <module>mybatis</module>
         <module>cloud</module>
         <module>security</module>
+        <module>redis-jedis</module>
+        <module>data-redis</module>
     </modules>
 
     <parent>

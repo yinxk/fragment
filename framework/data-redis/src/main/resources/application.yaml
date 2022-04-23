@@ -1,0 +1,6 @@
+spring:
+  redis:
+    host: 192.168.102.105
+    lettuce:
+      pool:
+        max-wait: 100ms
