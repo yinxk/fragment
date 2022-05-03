@@ -7,15 +7,25 @@ import java.util.Stack;
 
 public class Two {
 
+    public static void main(String[] args) {
+        String s = "3#4$2";
+        System.out.println(com(s));
+        System.out.println(compute1(s));
+
+
+    }
+
     public static void main1(String[] args) {
         Scanner scanner = new Scanner(System.in);
         if (!scanner.hasNextLine()) {
             return;
         }
         String s = scanner.nextLine();
-        if (s == null || s.length() == 0) {
-            return;
-        }
+        int res = com(s);
+        System.out.print(res);
+    }
+
+    private static int com(String s) {
         int len = s.length();
         List<String> data = new ArrayList<>();
         StringBuilder strBuilder = new StringBuilder();
@@ -59,6 +69,47 @@ public class Two {
             }
             stack.push(pop);
         }
-        System.out.print(res);
+        return res;
+    }
+
+
+    public static int compute1(String s) {
+        int len = s.length();
+        char flag = '#';
+        Stack<Integer> st = new Stack<>();
+        int num;
+        for (int i = 0; i < len; i++) {
+            num = 0;
+            // 当前数字
+            while (i < len && s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+                num = num * 10 + s.charAt(i) - '0';
+                i++;
+            }
+
+            switch (flag) {
+                case '#':
+                    st.push(num);
+                    break;
+                case '$':
+                    int temp = st.pop();
+                    temp = 3 * temp + num + 2;
+                    st.push(temp);
+                    break;
+            }
+            if (i >= len) {
+                break;
+            }
+            flag = s.charAt(i);
+        }
+        Stack<Integer> stTmp = new Stack<>();
+        while (!st.isEmpty()) {
+            stTmp.push(st.pop());
+        }
+        while (stTmp.size() >= 2) {
+            int x = stTmp.pop();
+            int y = stTmp.pop();
+            stTmp.push(2 * x + 3 * y + 4);
+        }
+        return stTmp.pop();
     }
 }
