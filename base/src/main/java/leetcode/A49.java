@@ -9,9 +9,9 @@ import java.util.Map;
 public class A49 {
     public static void main(String[] args) {
         A49 obj = new A49();
-        System.out.println(obj.groupAnagrams(new String[]{"eat", "tea", "tan", "ate", "nat", "bat"}));
-        System.out.println(obj.groupAnagrams(new String[]{""}));
-        System.out.println(obj.groupAnagrams(new String[]{"a"}));
+        System.out.println(obj.groupAnagrams4(new String[]{"eat", "tea", "tan", "ate", "nat", "bat"}));
+        System.out.println(obj.groupAnagrams4(new String[]{""}));
+        System.out.println(obj.groupAnagrams4(new String[]{"a"}));
     }
 
     public List<List<String>> groupAnagrams(String[] strs) {
@@ -76,5 +76,19 @@ public class A49 {
             }
         }
         return true;
+    }
+
+
+
+    public List<List<String>> groupAnagrams4(String[] strs) {
+        Map<String, List<String>> res = new HashMap<>();
+        for(String s : strs){
+            char[] sChars = s.toCharArray();
+            Arrays.sort(sChars);
+            String key = new String(sChars);
+            res.putIfAbsent(key, new ArrayList<>());
+            res.get(key).add(s);
+        }
+        return new ArrayList<>(res.values());
     }
 }
